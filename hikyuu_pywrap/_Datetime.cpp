@@ -29,15 +29,15 @@ std::unique_ptr<Datetime> createFromPyDatetime(const py::object& src) {
         minute = PyDateTime_DATE_GET_MINUTE(src.ptr());
         hour = PyDateTime_DATE_GET_HOUR(src.ptr());
         day = PyDateTime_GET_DAY(src.ptr());
-        month = PyDateTime_GET_MONTH(src.ptr()) - 1;
+        month = PyDateTime_GET_MONTH(src.ptr());
         year = PyDateTime_GET_YEAR(src.ptr());
         microsecond = PyDateTime_DATE_GET_MICROSECOND(src.ptr());
     } else if (PyDate_Check(src.ptr())) {
         day = PyDateTime_GET_DAY(src.ptr());
-        month = PyDateTime_GET_MONTH(src.ptr()) - 1;
+        month = PyDateTime_GET_MONTH(src.ptr());
         year = PyDateTime_GET_YEAR(src.ptr());
     } else {
-        throw std::exception("Type error!");
+        throw std::exception("Can't convert, only support datetime to Datetime!");
     }
 
     if (year < 1400) {
@@ -175,6 +175,48 @@ void export_Datetime(py::module& m) {
                o |= hms;
 
                return (Py_hash_t)o;
+           })
+
+      .def("__eq__", (bool (*)(const Datetime&, const Datetime&)) & operator==)
+      .def("__eq__",
+           [](Datetime* date, const py::object& pyd) {
+               auto pydate = createFromPyDatetime(pyd);
+               return (*date) == (*pydate);
+           })
+
+      .def("__ne__", (bool (*)(const Datetime&, const Datetime&)) & operator!=)
+      .def("__ne__",
+           [](Datetime* date, const py::object& pyd) {
+               auto pydate = createFromPyDatetime(pyd);
+               return (*date) != (*pydate);
+           })
+
+      .def("__gt__", (bool (*)(const Datetime&, const Datetime&)) & operator>)
+      .def("__gt__",
+           [](Datetime* date, const py::object& pyd) {
+               auto pydate = createFromPyDatetime(pyd);
+               return (*date) > (*pydate);
+           })
+
+      .def("__lt__", (bool (*)(const Datetime&, const Datetime&)) & operator<)
+      .def("__lt__",
+           [](Datetime* date, const py::object& pyd) {
+               auto pydate = createFromPyDatetime(pyd);
+               return (*date) < (*pydate);
+           })
+
+      .def("__ge__", (bool (*)(const Datetime&, const Datetime&)) & operator>=)
+      .def("__ge__",
+           [](Datetime* date, const py::object& pyd) {
+               auto pydate = createFromPyDatetime(pyd);
+               return (*date) >= (*pydate);
+           })
+
+      .def("__le__", (bool (*)(const Datetime&, const Datetime&)) & operator<=)
+      .def("__le__",
+           [](Datetime* date, const py::object& pyd) {
+               auto pydate = createFromPyDatetime(pyd);
+               return (*date) <= (*pydate);
            })
 
         DEF_PICKLE(Datetime);
