@@ -48,7 +48,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-from .core import *
+from hikyuu.cpp import *
 
 __version__ = getVersion()
 
+__doc__ = """
+Hikyuu Quant Framework is a high-performance open-source quantitative trading 
+research framework based on C++.
+\nsee more: http://hikyuu.org"""
