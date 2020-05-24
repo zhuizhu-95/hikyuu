@@ -247,4 +247,6 @@ void export_Datetime(py::module& m) {
            })
 
         DEF_PICKLE(Datetime);
+
+    // m.def("getDateRange", getDateRange, py::arg("start"), py::arg("end"));
 }

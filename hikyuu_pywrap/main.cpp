@@ -11,11 +11,17 @@
 using namespace hku;
 namespace py = pybind11;
 
+void export_stl_container(py::module& m);
+
 void export_Datetime(py::module& m);
+void export_Parameter(py::module& m);
 
 PYBIND11_MODULE(_hikyuu, m) {
     m.def("getVersion", &getVersion);
     m.def("getVersionWithBuild", &getVersionWithBuild);
 
+    export_stl_container(m);
+
     export_Datetime(m);
+    export_Parameter(m);
 }

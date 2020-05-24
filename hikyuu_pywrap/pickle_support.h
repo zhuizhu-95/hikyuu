@@ -1,10 +1,11 @@
 /*
- * pickle_template.h
+ *  Copyright (c) 2019 hikyuu.org
  *
- *  Created on: 2013-4-28
+ *  Created on: 2020-5-24
  *      Author: fasiondog
  */
 
+#pragma once
 #ifndef PICKLE_SUPPORT_H_
 #define PICKLE_SUPPORT_H_
 
@@ -47,21 +48,43 @@
 
 namespace py = pybind11;
 
-#define DEF_PICKLE(classname)                    \
-    .def(py::pickle(                             \
-      [](const classname& p) {                   \
-          std::ostringstream os;                 \
-          OUTPUT_ARCHIVE oa(os);                 \
-          oa << p;                               \
-          return py::str(os.str());              \
-      },                                         \
-      [](py::str t) {                            \
-          std::string st(t.cast<std::string>()); \
-          std::istringstream is(st);             \
-          INPUT_ARCHIVE ia(is);                  \
-          classname result;                      \
-          ia >> result;                          \
-          return result;                         \
+#define DEF_PICKLE(classname)                                                                      \
+    .def(py::pickle(                                                                               \
+      [](const classname& p) {                                                                     \
+          std::ostringstream os;                                                                   \
+          OUTPUT_ARCHIVE oa(os);                                                                   \
+          oa << p;                                                                                 \
+          std::string tmp(os.str());                                                               \
+          return py::make_tuple(                                                                   \
+            py::handle(PyBytes_FromStringAndSize(tmp.size() ? tmp.data() : 0, tmp.size())));       \
+      },                                                                                           \
+      [](py::tuple t) {                                                                            \
+          if (len(t) != 1) {                                                                       \
+              PyErr_SetObject(                                                                     \
+                PyExc_ValueError,                                                                  \
+                py::str("expected 1-item tuple in call to __setstate__; got {}").format(t).ptr()); \
+              throw py::error_already_set();                                                       \
+          }                                                                                        \
+          py::object obj = t[0];                                                                   \
+          if (py::isinstance<py::str>(obj)) {                                                      \
+              std::string st = t[0].cast<py::str>();                                               \
+              std::istringstream is(st);                                                           \
+              INPUT_ARCHIVE ia(is);                                                                \
+              classname result;                                                                    \
+              ia >> result;                                                                        \
+              return result;                                                                       \
+          } else if (PyBytes_Check(py::object(t[0]).ptr())) {                                      \
+              py::object obj = t[0];                                                               \
+              char* data = PyBytes_AsString(obj.ptr());                                            \
+              auto num = PyBytes_Size(obj.ptr());                                                  \
+              std::istringstream sin(std::string(data, num));                                      \
+              INPUT_ARCHIVE ia(sin);                                                               \
+              classname result;                                                                    \
+              ia >> result;                                                                        \
+              return result;                                                                       \
+          } else {                                                                                 \
+              throw std::runtime_error("Unable to unpickle, error in input file.");                \
+          }                                                                                        \
       }))
 
 #else
