@@ -45,6 +45,18 @@ def test_Parameter():
         x['unsupport'] = []
 
 
+def test_Parameter_other_func():
+    x = Parameter()
+    x.set('1', 2)
+    x.set('2', 3)
+    assert x['1'] == 2
+    assert x['2'] == 3
+    assert x.get('1') == 2
+    assert x.get('2') == 3
+
+    assert x.getNameList() == ['1', '2']
+
+
 def test_Parameter_pickle():
     x = Parameter()
     x['1'] = 2
