@@ -24,7 +24,9 @@ std::unique_ptr<Datetime> createFromPyDatetime(const py::object& src) {
     }
     long year = 0, month = 0, day = 0, hour = 0, minute = 0, second = 0, microsecond = 0;
 
-    if (PyDateTime_Check(src.ptr())) {
+    if (src.is_none()) {
+        return std::make_unique<Datetime>();
+    } else if (PyDateTime_Check(src.ptr())) {
         second = PyDateTime_DATE_GET_SECOND(src.ptr());
         minute = PyDateTime_DATE_GET_MINUTE(src.ptr());
         hour = PyDateTime_DATE_GET_HOUR(src.ptr());
@@ -55,7 +57,7 @@ void export_Datetime(py::module& m) {
                          R"(日期时间类（精确到微秒），通过以下方式构建:
     
     - 通过字符串：Datetime("2010-1-1 10:00:00")、Datetime("2001-1-1")
-                 Datetime("20010101")、Datetime("20010101T232359)
+                 Datetime("20010101")、Datetime("20010101T232359.001001")
     - 通过 Python 的date：Datetime(date(2010,1,1))
     - 通过 Python 的datetime：Datetime(datetime(2010,1,1,10)
     - 通过 YYYYMMDDHHMM　或　YYYYMMDD 形式的整数：Datetime(201001011000)、Datetime(20010101)
@@ -76,7 +78,15 @@ void export_Datetime(py::module& m) {
 
       .def(py::init<long, long, long, long, long, long, long, long>(), py::arg("year"),
            py::arg("month"), py::arg("day"), py::arg("hour") = 0, py::arg("minute") = 0,
-           py::arg("second") = 0, py::arg("millisecond") = 0, py::arg("microsecond") = 0)
+           py::arg("second") = 0, py::arg("millisecond") = 0, py::arg("microsecond") = 0,
+           "\t year - 1400 .. 9999"
+           "\n\t month - 1 .. 12"
+           "\n\t day - 1 .. 31"
+           "\n\t hour - 0 .. 23"
+           "\n\t minute - 0 .. 59"
+           "\n\t second - 0 .. 59"
+           "\n\t millisecond - 0 .. 999"
+           "\n\t microsecond - 0 .. 999")
 
       .def(py::init(&createFromPyDatetime),
            "\tconstruct from Python datetime.date or datetime.datetime:"
@@ -85,49 +95,66 @@ void export_Datetime(py::module& m) {
 
       .def("__str__", &Datetime::str)
       .def("__repr__", &Datetime::repr)
-      .def_property_readonly("year", &Datetime::year)
-      .def_property_readonly("month", &Datetime::month)
-      .def_property_readonly("day", &Datetime::day)
-      .def_property_readonly("hour", &Datetime::hour)
-      .def_property_readonly("minute", &Datetime::minute)
-      .def_property_readonly("second", &Datetime::second)
-      .def_property_readonly("millisecond", &Datetime::millisecond)
-      .def_property_readonly("microsecond", &Datetime::microsecond)
-      //.def_property_readonly("number", &Datetime::number)
 
-      .def("isNull", &Datetime::isNull)
-      .def("dayOfWeek", &Datetime::dayOfWeek)
-      .def("dayOfYear", &Datetime::dayOfYear)
-      .def("startOfDay", &Datetime::startOfDay)
-      .def("endOfDay", &Datetime::endOfDay)
-      .def("nextDay", &Datetime::nextDay)
-      .def("nextWeek", &Datetime::nextWeek)
-      .def("nextMonth", &Datetime::nextMonth)
-      .def("nextQuarter", &Datetime::nextQuarter)
-      .def("nextHalfyear", &Datetime::nextHalfyear)
-      .def("nextYear", &Datetime::nextYear)
-      .def("preDay", &Datetime::preDay)
-      .def("preWeek", &Datetime::preWeek)
-      .def("preMonth", &Datetime::preMonth)
-      .def("preQuarter", &Datetime::preQuarter)
-      .def("preHalfyear", &Datetime::preHalfyear)
-      .def("preYear", &Datetime::preYear)
-      .def("dateOfWeek", &Datetime::dateOfWeek)
-      .def("startOfWeek", &Datetime::startOfWeek)
-      .def("endOfWeek", &Datetime::endOfWeek)
-      .def("startOfMonth", &Datetime::startOfMonth)
-      .def("endOfMonth", &Datetime::endOfMonth)
-      .def("startOfQuarter", &Datetime::startOfQuarter)
-      .def("endOfQuarter", &Datetime::endOfQuarter)
-      .def("startOfHalfyear", &Datetime::startOfHalfyear)
-      .def("endOfHalfyear", &Datetime::endOfHalfyear)
-      .def("startOfYear", &Datetime::startOfYear)
-      .def("endOfYear", &Datetime::endOfYear)
+      .def_property_readonly(
+        "year", &Datetime::year,
+        "Between 1400 and 9999 inclusive. If it is the Datetime(), will throw RuntimeError.")
+      .def_property_readonly(
+        "month", &Datetime::month,
+        "Between 1 and 12 inclusive. If it is the Datetime(), will throw RuntimeError.")
+      .def_property_readonly("day", &Datetime::day,
+                             "Between 1 and the number of days in the given month of the given "
+                             "year. If it is the Datetime(), will throw RuntimeError.")
+      .def_property_readonly("hour", &Datetime::hour,
+                             "In range(24). If it is the Datetime(), will throw RuntimeError.")
+      .def_property_readonly("minute", &Datetime::minute,
+                             "In range(60). If it is the Datetime(), will throw RuntimeError.")
+      .def_property_readonly("second", &Datetime::second,
+                             "In range(60). If it is the Datetime(), will throw RuntimeError.")
+      .def_property_readonly("millisecond", &Datetime::millisecond,
+                             "In range(1000). If it is the Datetime(), will throw RuntimeError.")
+      .def_property_readonly("microsecond", &Datetime::microsecond,
+                             "In range(1000). If it is the Datetime(), will throw RuntimeError.")
 
-      .def("min", &Datetime::min)
-      .def("max", &Datetime::max)
-      .def("now", &Datetime::now)
-      .def("today", &Datetime::today)
+      .def("isNull", &Datetime::isNull,
+           "是否是Null值，等效于　d==Datetime()　或　d==Datetime(None)")
+      .def("dayOfWeek", &Datetime::dayOfWeek,
+           "Return the day of the week, Sunday is 0, Monday is 1.")
+      .def("dayOfYear", &Datetime::dayOfYear,
+           "Returns the day of the year, 1 January is the first day of the year.")
+      .def("startOfDay", &Datetime::startOfDay, "Return to 0:0:00 a.m. on the same day")
+      .def("endOfDay", &Datetime::endOfDay, "Return to 23:59:49 on the same day.")
+      .def("nextDay", &Datetime::nextDay, "Return the next nature day.")
+      .def("nextWeek", &Datetime::nextWeek, "Return to next Monday date.")
+      .def("nextMonth", &Datetime::nextMonth, "Returns the first day of the next month.")
+      .def("nextQuarter", &Datetime::nextQuarter, "Returns the first day of the next quarter.")
+      .def("nextHalfyear", &Datetime::nextHalfyear, "Returns the first day of the next half year.")
+      .def("nextYear", &Datetime::nextYear, "Returns the first day of the next year.")
+      .def("preDay", &Datetime::preDay, "Returns the date of the previous nature day.")
+      .def("preWeek", &Datetime::preWeek, "Return the date of the previous Monday date.")
+      .def("preMonth", &Datetime::preMonth, "Return the first date of the previous Month date.")
+      .def("preQuarter", &Datetime::preQuarter,
+           "Return the first date of the previous Quarter date.")
+      .def("preHalfyear", &Datetime::preHalfyear,
+           "Return the first date of the previous half year date.")
+      .def("preYear", &Datetime::preYear, "Return the first date of the previous year date.")
+      .def("dateOfWeek", &Datetime::dateOfWeek,
+           "Returns the date of the specified day of the week, Sunday is 0 day and Saturday is 6")
+      .def("startOfWeek", &Datetime::startOfWeek, "Return the week start date (Monday).")
+      .def("endOfWeek", &Datetime::endOfWeek, "Return the week end date (Sunday).")
+      .def("startOfMonth", &Datetime::startOfMonth, "Return the first date of the month.")
+      .def("endOfMonth", &Datetime::endOfMonth, "Return the last date of the month.")
+      .def("startOfQuarter", &Datetime::startOfQuarter, "Return the first date of the quarter.")
+      .def("endOfQuarter", &Datetime::endOfQuarter, "Return the last date of the month.")
+      .def("startOfHalfyear", &Datetime::startOfHalfyear, "Return the first date of the half year.")
+      .def("endOfHalfyear", &Datetime::endOfHalfyear, "Return the last date of the half-year.")
+      .def("startOfYear", &Datetime::startOfYear, "Return the first date of the year.")
+      .def("endOfYear", &Datetime::endOfYear, "Return the last date of the year.")
+
+      .def("min", &Datetime::min, "Return the smallest Datetime object. Datetime(1400,1,1)")
+      .def("max", &Datetime::max, "Return the largest Datetime object. Datetime(9999, 12, 31)")
+      .def("now", &Datetime::now, "Return the current local date and time.")
+      .def("today", &Datetime::today, "Return the current local date.")
 
       .def(
         "date",
