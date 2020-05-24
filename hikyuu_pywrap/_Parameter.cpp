@@ -27,14 +27,18 @@ void export_Parameter(py::module& m) {
       .def("__str__", &Parameter_to_str)
       .def("__repr__", &Parameter_to_str)
 
-      .def("have", &Parameter::have)
+      .def("have", &Parameter::have, "Return True if there is a parameter for the specified name.")
 
       .def("__setitem__", &Parameter::set<boost::any>)
       .def("__getitem__", &Parameter::get<boost::any>)
       .def("set", &Parameter::set<boost::any>)
       .def("get", &Parameter::get<boost::any>)
-      .def("getNameList", &Parameter::getNameList)
-      .def("getNameValueList", &Parameter::getNameValueList)
+      .def("type", &Parameter::type,
+           "Get the type name of the specified parameter, return 'string' | 'int' | 'double' | "
+           "'bool' | 'Stock' | 'KQuery' | 'KData' | 'PriceList' | 'DatetimeList'")
+      .def("getNameList", &Parameter::getNameList, "Get all the parameter names list")
+      .def("getNameValueList", &Parameter::getNameValueList,
+           "Return a string, like 'name1=val1,name2=val2,...'")
 
         DEF_PICKLE(Parameter);
 }

@@ -10,19 +10,15 @@ def test_Parameter():
     x["1"] = True
     assert x.have("1") == True
     assert x['1'] == True
-
     x["1"] = False
     assert x['1'] == False
-
     with pytest.raises(RuntimeError):
         x['1'] = 1
 
     x['2'] = 10
     assert x['2'] == 10
-
     x['2'] = 30
     assert x['2'] == 30
-
     with pytest.raises(RuntimeError):
         x['2'] = True
 
@@ -56,16 +52,30 @@ def test_Parameter_other_func():
 
     assert x.getNameList() == ['1', '2']
 
+    x = Parameter()
+    x['int'] = 10
+    assert x.type('int') == 'int'
+    x['bool'] = True
+    assert x.type('bool') == 'bool'
+    x['double'] = 0.1
+    assert x.type('double') == 'double'
+    x['string'] = 'string'
+    assert x.type('string') == 'string'
+
 
 def test_Parameter_pickle():
     x = Parameter()
-    x['1'] = 2
-    x['2'] = 3
+    x['bool'] = False
+    x['int'] = 3
+    x['double'] = 4.5
+    x['string'] = 'test string'
     with open("temp", "wb") as f:
         pickle.dump(x, f)
 
     with open("temp", "rb") as f:
         d = pickle.load(f)
 
-    assert d['1'] == 2
-    assert d['2'] == 3
+    assert d['bool'] == False
+    assert d['int'] == 3
+    assert d['double'] == 4.5
+    assert d['string'] == 'test string'
