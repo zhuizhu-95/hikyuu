@@ -11,8 +11,13 @@
 #include <hikyuu/utilities/util.h>
 #include <datetime.h>
 #include <memory>
-#include <hikyuu/serialization/Datetime_serialization.h>
 #include "pickle_support.h"
+
+#if HKU_PYTHON_SUPPORT_PICKLE
+#include <hikyuu/serialization/Datetime_serialization.h>
+#include <hikyuu/serialization/Datetime_serialization.h>
+#include <boost/serialization/vector.hpp>
+#endif
 
 using namespace hku;
 namespace py = pybind11;
@@ -248,5 +253,16 @@ void export_Datetime(py::module& m) {
 
         DEF_PICKLE(Datetime);
 
-    // m.def("getDateRange", getDateRange, py::arg("start"), py::arg("end"));
+    DatetimeList::const_reference (DatetimeList::*datetimeList_at)(DatetimeList::size_type) const =
+      &DatetimeList::at;
+    void (DatetimeList::*datetimelist_append)(const DatetimeList::value_type& val) =
+      &DatetimeList::push_back;
+    py::class_<DatetimeList>(m, "DatetimeList")
+      //.def("__iter__", py::iterator<DatetimeList>())
+      .def("size", &DatetimeList::size)
+      .def("__len__", &DatetimeList::size)
+      .def("append", datetimelist_append)
+      .def("get", datetimeList_at, py::return_value_policy::copy) DEF_PICKLE(DatetimeList);
+
+    m.def("getDateRange", getDateRange, py::arg("start"), py::arg("end"));
 }
