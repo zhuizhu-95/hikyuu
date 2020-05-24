@@ -34,7 +34,6 @@ void export_Parameter(py::module& m) {
       .def("set", &Parameter::set<boost::any>)
       .def("get", &Parameter::get<boost::any>)
       .def("getNameList", &Parameter::getNameList)
-      .def("getValueList", &Parameter::getValueList)
       .def("getNameValueList", &Parameter::getNameValueList)
 
         DEF_PICKLE(Parameter);
