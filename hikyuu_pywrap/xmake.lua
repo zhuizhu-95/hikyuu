@@ -71,7 +71,7 @@ target("_hikyuu")
         add_cxflags("-Wno-error=parentheses-equality -Wno-error=missing-braces")
     end
 
-    add_files("./*.cpp")
+    add_files("./**.cpp")
 
     on_load(function(target)
         import("lib.detect.find_tool")

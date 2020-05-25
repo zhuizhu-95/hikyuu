@@ -8,15 +8,13 @@
 #include <pybind11/pybind11.h>
 #include <hikyuu/datetime/Datetime.h>
 #include <hikyuu/utilities/Null.h>
-#include <hikyuu/utilities/util.h>
 #include <datetime.h>
 #include <memory>
-#include "pickle_support.h"
+#include "../pybind_utils.h"
+#include "../pickle_support.h"
 
 #if HKU_PYTHON_SUPPORT_PICKLE
 #include <hikyuu/serialization/Datetime_serialization.h>
-#include <hikyuu/serialization/Datetime_serialization.h>
-#include <boost/serialization/vector.hpp>
 #endif
 
 using namespace hku;
@@ -253,16 +251,11 @@ void export_Datetime(py::module& m) {
 
         DEF_PICKLE(Datetime);
 
-    DatetimeList::const_reference (DatetimeList::*datetimeList_at)(DatetimeList::size_type) const =
-      &DatetimeList::at;
-    void (DatetimeList::*datetimelist_append)(const DatetimeList::value_type& val) =
-      &DatetimeList::push_back;
-    py::class_<DatetimeList>(m, "DatetimeList")
-      //.def("__iter__", py::iterator<DatetimeList>())
-      .def("size", &DatetimeList::size)
-      .def("__len__", &DatetimeList::size)
-      .def("append", datetimelist_append)
-      .def("get", datetimeList_at, py::return_value_policy::copy) DEF_PICKLE(DatetimeList);
-
-    m.def("getDateRange", getDateRange, py::arg("start"), py::arg("end"));
+    m.def(
+      "getDateRange",
+      [](Datetime& start, Datetime& end) {
+          return vector_to_python_list<Datetime>(getDateRange(start, end));
+      },
+      py::arg("start"), py::arg("end"),
+      "Return a list of calendar dates for the specified range (start, end].");
 }
