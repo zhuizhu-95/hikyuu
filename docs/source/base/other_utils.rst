@@ -65,7 +65,7 @@
     :return: 处理过的数据
     
     
-.. py:function:: getDateRange(start, end)
+.. py:function:: get_date_range(start, end)
 
     获取指定 [start, end) 日期时间范围的自然日日历日期列表，仅支持到日
     
@@ -74,14 +74,6 @@
     :rtype: DatetimeList
 
     
-.. py:function:: toPriceList(arg)
-
-    将Python的可迭代对象如 list、tuple 转化为 PriceList
-    
-    :param arg: 待转化的Python序列
-    :rtype: PriceList
-    
-
 .. py:function:: set_global_context(stk, query)
 
     设置全局的 context

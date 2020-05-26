@@ -5,8 +5,8 @@
  *      Author: fasiondog
  */
 
-#include <vector>
 #include <pybind11/stl_bind.h>
+#include <vector>
 
 PYBIND11_MAKE_OPAQUE(std::vector<double>);
 

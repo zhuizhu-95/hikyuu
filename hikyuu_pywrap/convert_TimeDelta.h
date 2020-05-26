@@ -5,9 +5,13 @@
  *      Author: fasiondog
  */
 
+#pragma once
+#ifndef HIKYUU_PYTHON_CONVERT_TIMEDELTA_H
+#define HIKYUU_PYTHON_CONVERT_TIMEDELTA_H
+
 #include <pybind11/pybind11.h>
 #include <hikyuu/datetime/TimeDelta.h>
-#include "../pybind_utils.h"
+#include "pybind_utils.h"
 #include <datetime.h>
 
 using namespace hku;
@@ -70,3 +74,5 @@ public:
 
 }  // namespace detail
 }  // namespace pybind11
+
+#endif  // HIKYUU_PYTHON_CONVERT_TIMEDELTA_H
