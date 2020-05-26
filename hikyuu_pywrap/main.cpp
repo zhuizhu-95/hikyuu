@@ -14,15 +14,14 @@
 using namespace hku;
 namespace py = pybind11;
 
+void export_hikyuu(py::module& m);
 void export_stl_container(py::module& m);
-
 void export_Parameter(py::module& m);
-// void export_Datetime(py::module& m);
+void export_StockManager(py::module& m);
+void export_Stock(py::module& m);
+void export_MarketInfo(py::module& m);
 
 PYBIND11_MODULE(_hikyuu, m) {
-    m.def("getVersion", &getVersion);
-    m.def("getVersionWithBuild", &getVersionWithBuild);
-
     m.def(
       "get_date_range",
       [](Datetime& start, Datetime& end) {
@@ -39,8 +38,10 @@ PYBIND11_MODULE(_hikyuu, m) {
       "print_timedelta", [](const TimeDelta& d) { fmt::print("{}\n", d); },
       "test convert Python timedelta <--> TimeDelta");
 
+    export_hikyuu(m);
     export_stl_container(m);
     export_Parameter(m);
-
-    // export_Datetime(m);
+    export_StockManager(m);
+    export_Stock(m);
+    export_MarketInfo(m);
 }

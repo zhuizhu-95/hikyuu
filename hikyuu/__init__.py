@@ -50,7 +50,7 @@ SOFTWARE.
 
 from hikyuu.cpp import *
 
-__version__ = getVersion()
+__version__ = get_version()
 
 __doc__ = """
 Hikyuu Quant Framework is a high-performance open-source quantitative trading 
