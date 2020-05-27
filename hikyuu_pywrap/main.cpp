@@ -20,6 +20,9 @@ void export_Parameter(py::module& m);
 void export_StockManager(py::module& m);
 void export_Stock(py::module& m);
 void export_MarketInfo(py::module& m);
+void export_StockTypeInfo(py::module& m);
+void export_StockType(py::module& m);
+void export_KQuery(py::module& m);
 
 PYBIND11_MODULE(_hikyuu, m) {
     m.def(
@@ -44,4 +47,7 @@ PYBIND11_MODULE(_hikyuu, m) {
     export_StockManager(m);
     export_Stock(m);
     export_MarketInfo(m);
+    export_StockType(m);
+    export_StockTypeInfo(m);
+    export_KQuery(m);
 }

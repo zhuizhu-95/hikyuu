@@ -61,6 +61,7 @@ target("_hikyuu")
 
     if is_plat("windows") then
         add_defines("HKU_API=__declspec(dllimport)")
+        add_cxflags("/utf-8")
         add_cxflags("-wd4566")
         add_cxflags("-wd4251")
     end

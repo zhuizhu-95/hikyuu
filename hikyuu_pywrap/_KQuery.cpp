@@ -1,0 +1,62 @@
+/*
+ *  Copyright (c) 2019 hikyuu.org
+ *
+ *  Created on: 2020-5-27
+ *      Author: fasiondog
+ */
+
+#include <pybind11/pybind11.h>
+#include "pickle_support.h"
+#include <hikyuu/serialization/Datetime_serialization.h>
+#include <hikyuu/serialization/KQuery_serialization.h>
+#include <fmt/format.h>
+
+using namespace hku;
+namespace py = pybind11;
+
+string KQuery_to_str(const KQuery& q) {
+    return fmt::format("{}", q);
+}
+
+void export_KQuery(py::module& m) {
+    int64_t null_int = Null<int64_t>();
+
+    py::class_<KQuery> kquery(m, "Query", "K线数据查询条件");
+    kquery.def(py::init<>())
+      .def("__str__", KQuery_to_str)
+      .def("__repr__", KQuery_to_str)
+      .def_property_readonly("start", &KQuery::start, "起始索引，当按日期查询方式创建时无效")
+      .def_property_readonly("end", &KQuery::end, "结束索引，当按日期查询方式创建时无效")
+      .def_property_readonly("start_date", &KQuery::startDatetime,
+                             "起始日期，当按索引查询方式创建时无效")
+      .def_property_readonly("end_date", &KQuery::endDatetime,
+                             "结束日期，当按索引查询方式创建时无效")
+      //.def_property_readonly("queryType", &KQuery::queryType, "查询方式")
+      .def_property_readonly("ktype", &KQuery::kType, "查询的K线类型")
+      .def_property_readonly("recover_type", &KQuery::recoverType, "复权类别")
+      .def("getQueryTypeName", &KQuery::getQueryTypeName)
+      .def("getKTypeName", &KQuery::getKTypeName)
+      .def("getRecoverTypeName", &KQuery::getRecoverTypeName)
+
+        DEF_PICKLE(KQuery);
+
+    py::enum_<KQuery::RecoverType>(kquery, "RecoverType")
+      .value("NO_RECOVER", KQuery::RecoverType::NO_RECOVER, "不复权")
+      .value("FORWARD", KQuery::RecoverType::FORWARD, "前向复权")
+      .value("BACKWARD", KQuery::RecoverType::BACKWARD, "后向复权")
+      .value("EQUAL_FORWARD", KQuery::RecoverType::EQUAL_FORWARD, "等比前向复权")
+      .value("EQUAL_BACKWARD", KQuery::RecoverType::EQUAL_BACKWARD, "等比后向复权")
+      .value("INVALID", KQuery::RecoverType::INVALID_RECOVER_TYPE, "无效类型")
+      .export_values();
+
+    py::enum_<KQuery::QueryType>(kquery, "QueryType")
+      .value("INDEX", KQuery::QueryType::INDEX, "按索引方式查询")
+      .value("DATE", KQuery::QueryType::DATE, "按日期方式查询")
+      .value("INVALID", KQuery::QueryType::INVALID, "无效类型")
+      .export_values();
+
+    // 使用了内部枚举类型，需要枚举类型先注册，否则加载报错
+    kquery.def(py::init<int64_t, int64_t, KQuery::KType, KQuery::RecoverType>(), py::arg("start"),
+               py::arg("end") = null_int, py::arg("ktype") = KQuery::DAY,
+               py::arg("recover_type") = KQuery::NO_RECOVER);
+}

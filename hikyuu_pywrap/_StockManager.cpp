@@ -8,6 +8,7 @@
 #include <pybind11/pybind11.h>
 #include <hikyuu/StockManager.h>
 #include "pybind_utils.h"
+#include "StockType.h"
 
 using namespace hku;
 namespace py = pybind11;
@@ -17,6 +18,8 @@ void export_StockManager(py::module& m) {
       .def("instance", &StockManager::instance, py::return_value_policy::reference)
       .def("init", &StockManager::init)
       .def("tmpdir", &StockManager::tmpdir, "Get the temporary path of hikyuu.")
+      .def("datadir", &StockManager::datadir, "Return the data path of hikyuu.")
+
       .def("setKDataDriver", &StockManager::setKDataDriver)
       .def("getBaseInfoDriverParameter", &StockManager::getBaseInfoDriverParameter)
       .def("getBlockDriverParameter", &StockManager::getBlockDriverParameter)
@@ -24,11 +27,18 @@ void export_StockManager(py::module& m) {
       .def("getPreloadParameter", &StockManager::getPreloadParameter)
       .def("getHikyuuParameter", &StockManager::getHikyuuParameter)
 
-      .def("get_all_market",
-           [](const StockManager& sm) { return vector_to_python_list<string>(sm.getAllMarket()); })
-      .def("get_market_info", &StockManager::getMarketInfo)
+      .def(
+        "get_all_market",
+        [](const StockManager& sm) { return vector_to_python_list<string>(sm.getAllMarket()); },
+        "获取市场简称列表")
 
-      .def("getStockTypeInfo", &StockManager::getStockTypeInfo)
+      .def("get_market_info", &StockManager::getMarketInfo, "获取相应的市场信息")
+
+      .def(
+        "get_stock_type_info",
+        [](const StockManager& sm, StockType& tp) { return sm.getStockTypeInfo(tp); },
+        "获取证券类型详细信息")
+
       .def("size", &StockManager::size)
       .def("get_stock", &StockManager::getStock,
            "Return the stock object of the specified code, like 'sh000001'")
