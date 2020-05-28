@@ -7,6 +7,7 @@
 
 #include <pybind11/pybind11.h>
 #include "pickle_support.h"
+#include "convert_Datetime.h"
 #include <hikyuu/serialization/Datetime_serialization.h>
 #include <hikyuu/serialization/KQuery_serialization.h>
 #include <fmt/format.h>
@@ -15,7 +16,11 @@ using namespace hku;
 namespace py = pybind11;
 
 string KQuery_to_str(const KQuery& q) {
-    return fmt::format("{}", q);
+    return q.queryType() == KQuery::INDEX
+             ? fmt::format("Query({}, {}, {}, {})", q.start(), q.end(), q.kType(),
+                           KQuery::getRecoverTypeName(q.recoverType()))
+             : fmt::format("Query({}, {}, {}, {})", q.startDatetime(), q.endDatetime(), q.kType(),
+                           KQuery::getRecoverTypeName(q.recoverType()));
 }
 
 void export_KQuery(py::module& m) {
@@ -34,9 +39,6 @@ void export_KQuery(py::module& m) {
       //.def_property_readonly("queryType", &KQuery::queryType, "查询方式")
       .def_property_readonly("ktype", &KQuery::kType, "查询的K线类型")
       .def_property_readonly("recover_type", &KQuery::recoverType, "复权类别")
-      .def("getQueryTypeName", &KQuery::getQueryTypeName)
-      .def("getKTypeName", &KQuery::getKTypeName)
-      .def("getRecoverTypeName", &KQuery::getRecoverTypeName)
 
         DEF_PICKLE(KQuery);
 
@@ -58,5 +60,23 @@ void export_KQuery(py::module& m) {
     // 使用了内部枚举类型，需要枚举类型先注册，否则加载报错
     kquery.def(py::init<int64_t, int64_t, KQuery::KType, KQuery::RecoverType>(), py::arg("start"),
                py::arg("end") = null_int, py::arg("ktype") = KQuery::DAY,
-               py::arg("recover_type") = KQuery::NO_RECOVER);
+               py::arg("recover_type") = KQuery::NO_RECOVER,
+               "\t构建按索引 [start, end) 方式获取K线数据条件");
+
+    Datetime null_date;
+    kquery.def(py::init<const Datetime&, const Datetime&, KQuery::KType, KQuery::RecoverType>(),
+               py::arg("start"), py::arg("end") = null_date, py::arg("ktype") = KQuery::DAY,
+               py::arg("recover_type") = KQuery::NO_RECOVER,
+               "\t构建按日期 [start, end) 方式获取K线数据条件");
+
+    kquery.attr("DAY") = "DAY";
+    kquery.attr("WEEK") = "WEEK";
+    kquery.attr("MONTH") = "MONTH";
+    kquery.attr("QUARTER") = "QUARTER";
+    kquery.attr("HALFYEAR") = "HALFYEAR";
+    kquery.attr("MIN") = "MIN";
+    kquery.attr("MIN5") = "MIN5";
+    kquery.attr("MIN15") = "MIN15";
+    kquery.attr("MIN30") = "MIN30";
+    kquery.attr("MIN60") = "MIN60";
 }
