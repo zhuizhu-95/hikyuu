@@ -71,23 +71,42 @@ void export_Stock(py::module& m) {
       .def("get_Krecord_by_dateB", &Stock::getKRecordByDate, py::arg("date"),
            py::arg("ktype") = KQuery::DAY)
       .def("get_krecord_list", &Stock::getKRecordList)
-      .def("get_datetime_list",
-           [](const Stock& stk, size_t start, size_t end, KQuery::KType ktype) {
-               return vector_to_python_list<Datetime>(stk.getDatetimeList(start, end, ktype));
-           })
 
-      .def("get_datetime_list",
-           [](const Stock& stk, const KQuery& q) {
-               return vector_to_python_list<Datetime>(stk.getDatetimeList(q));
-           })
+      .def(
+        "get_date_list",
+        [](const Stock& stk, size_t start, size_t end, KQuery::KType ktype) {
+            return vector_to_python_list<Datetime>(stk.getDatetimeList(start, end, ktype));
+        },
+        R"(获取日期时间列表 [start, end)
+
+:param int start: 起始位置
+:param ind end: 结束位置
+:param Query.KType ktype: K线类型)")
+
+      .def(
+        "get_date_list",
+        [](const Stock& stk, const KQuery& q) {
+            return vector_to_python_list<Datetime>(stk.getDatetimeList(q));
+        },
+        R"(获取日期时间列表
+
+:param Query query: 查询条件)")
 
       .def("get_finance_info", &Stock::getFinanceInfo)
       .def("get_history_finance_info", &Stock::getHistoryFinanceInfo)
       .def("realtime_update", &Stock::realtimeUpdate)
       //.def("getWeight", getWeight1)
       //.def("getWeight", getWeight2)
-      .def("load_kdata_to_buffer", &Stock::loadKDataToBuffer)
-      .def("release_kdata_buffer", &Stock::releaseKDataBuffer)
+
+      .def("load_kdata_to_buffer", &Stock::loadKDataToBuffer,
+           R"(将指定类别的K线数据加载至内存缓存
+
+:param Query.KType ktype: K线类型)")
+
+      .def("release_kdata_buffer", &Stock::releaseKDataBuffer,
+           R"(释放指定类别的内存K线数据        
+
+:param Query.KType ktype: K线类型)")
 
       .def("__hash__", [](const Stock& stock) { return (Py_hash_t)stock.id(); })
 

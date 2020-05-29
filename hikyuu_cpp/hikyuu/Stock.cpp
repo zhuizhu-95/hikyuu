@@ -248,7 +248,7 @@ bool Stock::isNull() const {
     return false;
 }
 
-void Stock::releaseKDataBuffer(KQuery::KType kType) {
+void Stock::releaseKDataBuffer(KQuery::KType inkType) {
     // if (!m_data || kType >= KQuery::INVALID_KTYPE)
     if (!m_data)
         return;
@@ -256,14 +256,19 @@ void Stock::releaseKDataBuffer(KQuery::KType kType) {
     // if (m_data->pKData[kType])
     // if (m_data->pKData.find(kType) != m_data->pKData.end())
     // m_data->pKData[kType] = KRecordListPtr();
+    string kType(inkType);
+    to_upper(kType);
     m_data->pKData.erase(kType);
     return;
 }
 
-void Stock::loadKDataToBuffer(KQuery::KType kType) {
+void Stock::loadKDataToBuffer(KQuery::KType inkType) {
     // if (!m_data || kType >= KQuery::INVALID_KTYPE)
     if (!m_data)
         return;
+
+    string kType(inkType);
+    to_upper(kType);
 
     releaseKDataBuffer(kType);
     m_data->pKData[kType] = make_shared<KRecordList>();
@@ -507,9 +512,12 @@ bool Stock::_getIndexRangeByDateFromBuffer(const KQuery& query, size_t& out_star
     return true;
 }
 
-KRecord Stock ::getKRecord(size_t pos, KQuery::KType kType) const {
+KRecord Stock ::getKRecord(size_t pos, KQuery::KType inkType) const {
     if (!m_data)
         return KRecord();
+
+    string kType(inkType);
+    to_upper(kType);
 
     if (m_data->pKData.find(kType) != m_data->pKData.end())
         return m_data->pKData[kType]->at(pos);
