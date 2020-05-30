@@ -17,14 +17,19 @@ namespace py = pybind11;
 void export_hikyuu(py::module& m);
 void export_stl_container(py::module& m);
 void export_Parameter(py::module& m);
+void export_KRecord(py::module& m);
 void export_StockManager(py::module& m);
 void export_Stock(py::module& m);
 void export_MarketInfo(py::module& m);
 void export_StockTypeInfo(py::module& m);
 void export_StockType(py::module& m);
 void export_KQuery(py::module& m);
+void export_TimeLineRecord(py::module& m);
+void export_TransRecord(py::module& m);
+void export_StockWeight(py::module& m);
+void export_KData(py::module& m);
 
-PYBIND11_MODULE(_hikyuu, m) {
+PYBIND11_MODULE(core, m) {
     m.def(
       "get_date_range",
       [](Datetime& start, Datetime& end) {
@@ -44,10 +49,15 @@ PYBIND11_MODULE(_hikyuu, m) {
     export_hikyuu(m);
     export_stl_container(m);
     export_Parameter(m);
+    export_KRecord(m);
     export_StockManager(m);
     export_Stock(m);
     export_MarketInfo(m);
     export_StockType(m);
     export_StockTypeInfo(m);
     export_KQuery(m);
+    export_TimeLineRecord(m);
+    export_TransRecord(m);
+    export_StockWeight(m);
+    export_KData(m);
 }

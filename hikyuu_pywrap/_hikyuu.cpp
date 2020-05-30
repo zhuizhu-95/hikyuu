@@ -12,8 +12,8 @@ using namespace hku;
 namespace py = pybind11;
 
 void export_hikyuu(py::module& m) {
-    m.def("get_version", &getVersion);
-    m.def("get_version_with_build", &getVersionWithBuild);
+    m.def("get_version", getVersion);
+    m.def("get_version_with_build", getVersionWithBuild);
 
-    m.def("hikyuu_init", &hikyuu_init);
+    m.def("hikyuu_init", hikyuu_init);
 }
