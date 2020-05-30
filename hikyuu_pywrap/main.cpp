@@ -14,12 +14,16 @@
 using namespace hku;
 namespace py = pybind11;
 
+void export_Constant(py::module& m);
+void export_utils(py::module& m);
 void export_hikyuu(py::module& m);
+void export_Log(py::module& m);
 void export_stl_container(py::module& m);
 void export_Parameter(py::module& m);
 void export_KRecord(py::module& m);
 void export_StockManager(py::module& m);
 void export_Stock(py::module& m);
+void export_Block(py::module& m);
 void export_MarketInfo(py::module& m);
 void export_StockTypeInfo(py::module& m);
 void export_StockType(py::module& m);
@@ -46,12 +50,16 @@ PYBIND11_MODULE(core, m) {
       "print_timedelta", [](const TimeDelta& d) { fmt::print("{}\n", d); },
       "test convert Python timedelta <--> TimeDelta");
 
+    export_Constant(m);
+    export_utils(m);
     export_hikyuu(m);
+    export_Log(m);
     export_stl_container(m);
     export_Parameter(m);
     export_KRecord(m);
     export_StockManager(m);
     export_Stock(m);
+    export_Block(m);
     export_MarketInfo(m);
     export_StockType(m);
     export_StockTypeInfo(m);
