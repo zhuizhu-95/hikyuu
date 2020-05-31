@@ -19,8 +19,9 @@ namespace hku {
 
 template <typename T>
 std::vector<T> python_list_to_vector(const py::list& obj) {
-    std::vector<T> vect(len(obj));
-    for (unsigned long i = 0; i < vect.size(); ++i) {
+    auto total = len(obj);
+    std::vector<T> vect(total);
+    for (auto i = 0; i < total; ++i) {
         vect[i] = obj[i].cast<T>();
     }
     return vect;

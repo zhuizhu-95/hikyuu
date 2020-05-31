@@ -25,5 +25,6 @@ void export_StockType(py::module& m) {
       .value("GEM", StockType::GEM, "创业板")
       .value("BTC", StockType::BTC, "比特币")
       .value("TMP", StockType::TMP, "用于临时Stock")
+      .value("INVALID", StockType::INVALID, "无效类型")
       .export_values();
 }

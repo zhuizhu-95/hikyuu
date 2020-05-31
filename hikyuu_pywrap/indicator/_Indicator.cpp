@@ -5,6 +5,7 @@
  *      Author: fasiondog
  */
 
+#include <sstream>
 #include <hikyuu/indicator/Indicator.h>
 #include <pybind11/pybind11.h>
 #include "../convert_Datetime.h"
@@ -17,12 +18,34 @@ string Indicator_to_string(const Indicator& ind) {
     return fmt::format("{}", ind);
 }
 
+string print_Indicator(const Indicator& ind) {
+    std::stringstream buf;
+    buf << "---------------------------" << std::endl;
+    buf << "datetime             value" << std::endl;
+    buf << "---------------------------" << std::endl;
+    auto total = ind.size();
+    if (total <= 20) {
+        for (auto i = 0; i < total; ++i) {
+            buf << ind.getDatetime(i).str() << "  " << ind.get(i) << std::endl;
+        }
+    } else {
+        for (auto i = 0; i < 10; ++i) {
+            buf << ind.getDatetime(i).str() << "  " << ind.get(i) << std::endl;
+        }
+        buf << "..." << std::endl;
+        for (auto i = total - 10; i < total; ++i) {
+            buf << ind.getDatetime(i).str() << "  " << ind.get(i) << std::endl;
+        }
+    }
+    return buf.str();
+}
+
 void export_Indicator(py::module& m) {
     py::class_<Indicator>(m, "Indicator", "技术指标")
       .def(py::init<>())
       .def(py::init<IndicatorImpPtr>())
 
-      .def("__str__", Indicator_to_string)
+      .def("__str__", print_Indicator)
       .def("__repr__", Indicator_to_string)
 
       .def_property("name", py::overload_cast<void>(&Indicator::name, py::const_),

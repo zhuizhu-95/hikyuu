@@ -24,7 +24,8 @@ enum StockType {
     BOND = STOCKTYPE_BOND,
     GEM = STOCKTYPE_GEM,
     BTC = STOCKTYPE_BTC,
-    TMP = STOCKTYPE_TMP
+    TMP = STOCKTYPE_TMP,
+    INVALID = 9999
 };
 
 }  // namespace hku

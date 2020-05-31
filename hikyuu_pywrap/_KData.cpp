@@ -14,6 +14,44 @@
 using namespace hku;
 namespace py = pybind11;
 
+string print_KData(const KData& k) {
+    std::stringstream buf;
+    // buf << k << std::endl;
+    buf << "----------------------------------------------------------------" << std::endl;
+    buf << "datetime             open     high    low    close    amo    vol" << std::endl;
+    buf << "----------------------------------------------------------------" << std::endl;
+    size_t max_print = 20;
+    size_t total = k.size();
+    string strip("  ");
+    if (total <= max_print) {
+        for (size_t i = 0; i < total; ++i) {
+            KRecord r = k.getKRecord(i);
+            buf << r.datetime.str() << strip << r.openPrice << strip << r.highPrice << strip
+                << r.lowPrice << strip << r.closePrice << strip << r.transAmount << strip
+                << r.transCount << std::endl;
+            ;
+        }
+    } else {
+        for (size_t i = 0; i < max_print / 2; ++i) {
+            KRecord r = k.getKRecord(i);
+            buf << r.datetime.str() << strip << r.openPrice << strip << r.highPrice << strip
+                << r.lowPrice << strip << r.closePrice << strip << r.transAmount << strip
+                << r.transCount << std::endl;
+            ;
+        }
+        buf << "..." << std::endl;
+        for (size_t i = total - max_print / 2; i < total; ++i) {
+            KRecord r = k.getKRecord(i);
+            buf << r.datetime.str() << strip << r.openPrice << strip << r.highPrice << strip
+                << r.lowPrice << strip << r.closePrice << strip << r.transAmount << strip
+                << r.transCount << std::endl;
+            ;
+        }
+    }
+
+    return buf.str();
+}
+
 void export_KData(py::module& m) {
     py::class_<KData>(
       m, "KData",
@@ -23,7 +61,7 @@ void export_KData(py::module& m) {
       .def(py::init<const KData&>())
       .def(py::init<const Stock&, const KQuery&>())
 
-      .def("__str__", &KData::toString)
+      .def("__str__", print_KData)
       .def("__repr__", &KData::toString)
       .def("__len__", &KData::size)
 
@@ -38,12 +76,12 @@ void export_KData(py::module& m) {
         "last_pos", &KData::lastPos,
         "获取在原始K线记录中对应的最后一条记录的位置，如果为空返回0,其他等于end_pos - 1 ")
 
-      .def_property_readonly("OPEN", &KData::open, "开盘价指标")
-      .def_property_readonly("CLOSE", &KData::close, "收盘价指标")
-      .def_property_readonly("HIGH", &KData::high, "最高价指标")
-      .def_property_readonly("LOW", &KData::low, "最低价指标")
-      .def_property_readonly("AMO", &KData::amo, "成交金额指标")
-      .def_property_readonly("VOL", &KData::vol, "成交量指标")
+      .def_property_readonly("open", &KData::open, "开盘价指标")
+      .def_property_readonly("close", &KData::close, "收盘价指标")
+      .def_property_readonly("high", &KData::high, "最高价指标")
+      .def_property_readonly("low", &KData::low, "最低价指标")
+      .def_property_readonly("amo", &KData::amo, "成交金额指标")
+      .def_property_readonly("vol", &KData::vol, "成交量指标")
 
       .def(
         "get_date_List", [](const KData& k) { return vector_to_python_list(k.getDatetimeList()); },

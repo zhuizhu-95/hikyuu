@@ -15,14 +15,14 @@ namespace hku {
 
 HKU_API std::ostream& operator<<(std::ostream& os, const KData& kdata) {
     os << "KData{\n  size : " << kdata.size() << "\n  stock: " << kdata.getStock()
-       << ",\n  query: " << kdata.getQuery() << "\n }";
+       << "\n  query: " << kdata.getQuery() << "\n}";
     return os;
 }
 
 string KData::toString() const {
     std::stringstream os;
     os << "KData{\n  size : " << size() << "\n  stock: " << getStock().toString()
-       << ",\n  query: " << getQuery() << "\n }";
+       << ",\n  query: " << getQuery() << "\n}";
     return os.str();
 }
 
