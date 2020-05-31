@@ -33,6 +33,10 @@ void export_TransRecord(py::module& m);
 void export_StockWeight(py::module& m);
 void export_KData(py::module& m);
 
+void export_Indicator(py::module& m);
+void export_IndicatorImp(py::module& m);
+void export_Indicator_build_in(py::module& m);
+
 PYBIND11_MODULE(core, m) {
     m.def(
       "get_date_range",
@@ -68,4 +72,8 @@ PYBIND11_MODULE(core, m) {
     export_TransRecord(m);
     export_StockWeight(m);
     export_KData(m);
+
+    export_Indicator(m);
+    export_IndicatorImp(m);
+    export_Indicator_build_in(m);
 }

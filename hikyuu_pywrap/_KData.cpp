@@ -38,12 +38,12 @@ void export_KData(py::module& m) {
         "last_pos", &KData::lastPos,
         "获取在原始K线记录中对应的最后一条记录的位置，如果为空返回0,其他等于end_pos - 1 ")
 
-      .def_property_readonly("open", &KData::open, "开盘价指标")
-      .def_property_readonly("close", &KData::close, "收盘价指标")
-      .def_property_readonly("high", &KData::high, "最高价指标")
-      .def_property_readonly("low", &KData::low, "最低价指标")
-      .def_property_readonly("amo", &KData::amo, "成交金额指标")
-      .def_property_readonly("vol", &KData::vol, "成交量指标")
+      .def_property_readonly("OPEN", &KData::open, "开盘价指标")
+      .def_property_readonly("CLOSE", &KData::close, "收盘价指标")
+      .def_property_readonly("HIGH", &KData::high, "最高价指标")
+      .def_property_readonly("LOW", &KData::low, "最低价指标")
+      .def_property_readonly("AMO", &KData::amo, "成交金额指标")
+      .def_property_readonly("VOL", &KData::vol, "成交量指标")
 
       .def(
         "get_date_List", [](const KData& k) { return vector_to_python_list(k.getDatetimeList()); },
@@ -81,7 +81,7 @@ void export_KData(py::module& m) {
            [](const KData& k, const Datetime& date) { return k.getKRecordByDate(date); })
 
       .def("__getitem__",
-           [](const KData& k, string date) { return k.getKRecordByDate(Datetime(date)); })
+           [](const KData& k, const string& date) { return k.getKRecordByDate(Datetime(date)); })
 
       .def("__getitem__",
            [](const KData& k, py::slice slice) {
