@@ -139,4 +139,33 @@ void export_KData(py::module& m) {
            })
 
         DEF_PICKLE(KData);
+
+    int64 null_int64 = Null<int64>();
+    Datetime null_date = Null<Datetime>();
+
+    m.def(
+      "get_kdata",
+      py::overload_cast<const string&, int64, int64, KQuery::KType, KQuery::RecoverType>(getKData),
+      py::arg("market_code"), py::arg("start") = 0, py::arg("end") = null_int64,
+      py::arg("ktype") = KQuery::DAY, py::arg("recover_type") = KQuery::NO_RECOVER,
+      R"(根据证券代码及起止位置获取 [start, end) 范围的 K 线数据
+
+    :param str market_code: 证券代码，如: 'sh000001'
+    :param int start: 起始索引
+    :param int end: 结束索引
+    :param Query.KType ktype: K 线类型, 'DAY'|'WEEK'|'MONTH'|'QUARTER'|'HALFYEAR'|'YEAR'|'MIN'|'MIN5'|'MIN15'|'MIN30'|'MIN60'
+    :param Query.RecoverType recover_type: 复权类型)");
+
+    m.def("get_kdata",
+          py::overload_cast<const string&, const Datetime&, const Datetime&, KQuery::KType,
+                            KQuery::RecoverType>(getKData),
+          py::arg("market_code"), py::arg("start") = Datetime::min(), py::arg("end") = null_date,
+          py::arg("ktype") = KQuery::DAY, py::arg("recover_type") = KQuery::NO_RECOVER,
+          R"(根据证券代码及起止日期获取 [start, end) 范围的 K 线数据
+
+    :param str market_code: 证券代码，如: 'sh000001'
+    :param int start: 起始日期
+    :param int end: 结束日期
+    :param Query.KType ktype: K 线类型, 'DAY'|'WEEK'|'MONTH'|'QUARTER'|'HALFYEAR'|'YEAR'|'MIN'|'MIN5'|'MIN15'|'MIN30'|'MIN60'
+    :param Query.RecoverType recover_type: 复权类型)");
 }

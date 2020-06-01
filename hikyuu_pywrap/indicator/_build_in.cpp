@@ -84,10 +84,10 @@ void export_Indicator_build_in(py::module& m) {
     :param ref: 指定做为日期参考的 datetime list、Indicator 或 KData
     :retype: Indicator)");
 
-    m.def("AMA", py::overload_cast<int, int, int>(AMA), py::arg("n") = 10, py::arg("fase_n") = 2,
+    m.def("AMA", py::overload_cast<int, int, int>(AMA), py::arg("n") = 10, py::arg("fast_n") = 2,
           py::arg("slow_n") = 30);
     m.def("AMA", py::overload_cast<const Indicator&, int, int, int>(AMA), py::arg("data"),
-          py::arg("n") = 10, py::arg("fase_n") = 2, py::arg("slow_n") = 30,
+          py::arg("n") = 10, py::arg("fast_n") = 2, py::arg("slow_n") = 30,
           R"(AMA([data, n=10, fast_n=2, slow_n=30])
 
     佩里.J 考夫曼（Perry J.Kaufman）自适应移动平均 [BOOK1]_
