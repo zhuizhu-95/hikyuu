@@ -20,21 +20,29 @@ string Indicator_to_string(const Indicator& ind) {
 
 string print_Indicator(const Indicator& ind) {
     std::stringstream buf;
-    buf << "---------------------------" << std::endl;
-    buf << "datetime             value" << std::endl;
-    buf << "---------------------------" << std::endl;
-    auto total = ind.size();
-    if (total <= 20) {
-        for (auto i = 0; i < total; ++i) {
-            buf << ind.getDatetime(i).str() << "  " << ind.get(i) << std::endl;
+    auto result_num = ind.getResultNumber();
+    for (auto r = 0; r < result_num; ++r) {
+        if (r != 0) {
+            buf << std::endl;
         }
-    } else {
-        for (auto i = 0; i < 10; ++i) {
-            buf << ind.getDatetime(i).str() << "  " << ind.get(i) << std::endl;
-        }
-        buf << "..." << std::endl;
-        for (auto i = total - 10; i < total; ++i) {
-            buf << ind.getDatetime(i).str() << "  " << ind.get(i) << std::endl;
+        buf << "result set: " << r << std::endl;
+        buf << "---------------------------" << std::endl;
+        buf << "datetime             value" << std::endl;
+        buf << "---------------------------" << std::endl;
+
+        auto total = ind.size();
+        if (total <= 20) {
+            for (auto i = 0; i < total; ++i) {
+                buf << ind.getDatetime(i).str() << "  " << ind.get(i) << std::endl;
+            }
+        } else {
+            for (auto i = 0; i < 10; ++i) {
+                buf << ind.getDatetime(i).str() << "  " << ind.get(i) << std::endl;
+            }
+            buf << "..." << std::endl;
+            for (auto i = total - 10; i < total; ++i) {
+                buf << ind.getDatetime(i).str() << "  " << ind.get(i) << std::endl;
+            }
         }
     }
     return buf.str();
