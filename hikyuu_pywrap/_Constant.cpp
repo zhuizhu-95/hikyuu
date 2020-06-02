@@ -52,4 +52,6 @@ void export_Constant(py::module& m) {
       .def_readonly("null_size", &Constant::null_size, "无效 size_t 类型")
       .def_readonly("null_int64", &Constant::null_int64, "无效64位整型")
       .def_readonly("pickle_support", &Constant::pickle_support, "是否支持 pickle");
+
+    m.attr("constant") = Constant();
 }

@@ -84,15 +84,23 @@ void export_KData(py::module& m) {
       .def_property_readonly("vol", &KData::vol, "成交量指标")
 
       .def(
-        "get_date_List", [](const KData& k) { return vector_to_python_list(k.getDatetimeList()); },
+        "get_date_list", [](const KData& k) { return vector_to_python_list(k.getDatetimeList()); },
         "返回交易日期列表")
 
       .def("get", &KData::getKRecord, "获取指定位置的KRecord，未作越界检查")
 
       .def("get_by_date", &KData::getKRecordByDate, "按日期查询KRecord")
 
-      .def("_get_Pos", &KData::getPos,
-           "按日期查询对应的索引位置")  // python中需要将Null的情况改写为None
+      .def(
+        "get_pos",
+        [](const KData& k, const Datetime& d) {
+            size_t pos = k.getPos(d);
+            return (pos == Null<size_t>()) ? py::none() : py::int_(pos);
+        },
+        R"(获取指定时间对应的索引位置
+
+    :param datetime: 指定的时间
+    :return: 对应的索引位置，如果不在数据范围内，则返回 None)")
 
       .def("size", &KData::size)
       .def("empty", &KData::empty)

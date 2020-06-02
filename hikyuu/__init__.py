@@ -53,10 +53,22 @@ from datetime import *
 from .core import *
 from .draw import *
 
+
 # ------------------------------------------------------------------
-# 常量定义，各种C++中Null值
+# 定义 KData, Indicator 迭代器
 # ------------------------------------------------------------------
-constant = Constant()
+def KData_iter(kdata):
+    for i in range(len(kdata)):
+        yield kdata[i]
+
+
+def indicator_iter(indicator):
+    for i in range(len(indicator)):
+        yield indicator[i]
+
+
+KData.__iter__ = KData_iter
+Indicator.__iter__ = indicator_iter
 
 #config_file = os.path.expanduser('~') + "/.hikyuu/hikyuu.ini"
 config_file = "./test_data/hikyuu_win.ini"
@@ -107,20 +119,12 @@ zsbk_zz100 = sm.get_block("指数板块", "沪深300")
 # 设置关键类型简称
 # ------------------------------------------------------------------
 
-KDATA = IKDATA()
-OPEN = IOPEN()
-CLOSE = ICLOSE()
-HIGH = IHIGH()
-LOW = ILOW()
-AMO = IAMO()
-VOL = IVOL()
-
-O = OPEN
-C = CLOSE
-H = HIGH
-L = LOW
-A = AMO
-V = VOL
+O = OPEN()
+C = CLOSE()
+H = HIGH()
+L = LOW()
+A = AMO()
+V = VOL()
 D = datetime
 K = None
 Q = Query

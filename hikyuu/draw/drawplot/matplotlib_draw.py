@@ -11,8 +11,7 @@ from pylab import Rectangle, gca, figure, ylabel, axes, draw
 from matplotlib.lines import Line2D, TICKLEFT, TICKRIGHT
 from matplotlib.ticker import FuncFormatter, FixedLocator
 
-from hikyuu.core import *
-
+from hikyuu import *
 from .common import get_draw_title
 
 constant = Constant()
@@ -84,7 +83,7 @@ def create_four_axes_figure(figsize=(10, 8)):
     return ax1, ax2, ax3, ax4
 
 
-def create_figure(n=1, figsize=(10, 8)):
+def create_figure(n=1, figsize=(8, 6)):
     """生成含有指定坐标轴数量的窗口，最大只支持4个坐标轴。
 
     :param int n: 坐标轴数量
@@ -131,26 +130,26 @@ def getDayLocatorAndFormatter(dates):
             if curyear > preyear:
                 strloc = str(curmonth)
                 loc.append(i)
-                month.append((i, "{}-{}".format(str(curyear)[-2:], str(curmonth))))
+                month.append((i, d.strftime('%Y-%m-%d')))
                 preyear = curyear
                 premonth = curmonth
             elif curmonth > premonth:
                 strloc = str(curmonth)
                 loc.append(i)
-                month.append((i, strloc[-2:]))
+                month.append((i, d.strftime('%Y-%m-%d')))
                 premonth = curmonth
             else:
-                month.append((i, str(d.number)))
+                month.append((i, d.strftime('%Y-%m-%d')))
 
     else:
         for i, d in enumerate(dates):
             curyear = d.year
             if curyear > preyear:
-                month.append((i, curyear))
+                month.append((i, d.strftime('%Y-%m-%d')))
                 loc.append(i)
                 preyear = curyear
             else:
-                month.append((i, str(d.number)))
+                month.append((i, d.strftime('%Y-%m-%d')))
 
     month_loc = FixedLocator(loc)
     month_fm = FuncFormatter(StockFuncFormatter(dict(month)))
@@ -165,11 +164,11 @@ def getMonthLocatorAndFormatter(dates):
     for i, d in enumerate(dates):
         curyear = d.year
         if curyear > preyear:
-            month.append((i, curyear))
+            month.append((i, d.strftime('%Y-%m-%d')))
             loc.append(i)
             preyear = curyear
         else:
-            month.append((i, str(d.number)))
+            month.append((i, d.strftime('%Y-%m-%d')))
 
     month_loc = FixedLocator(loc)
     month_fm = FuncFormatter(StockFuncFormatter(dict(month)))
@@ -184,17 +183,17 @@ def ax_set_locator_formatter(axes, dates, typ):
     :param KQuery.KType typ: K线类型
     """
     major_loc, major_fm = None, None
-    if typ == KQuery.DAY:
+    if typ == Query.DAY:
         major_loc, major_fm = getDayLocatorAndFormatter(dates)
-    elif typ == KQuery.WEEK:
+    elif typ == Query.WEEK:
         major_loc, major_fm = getDayLocatorAndFormatter(dates)
-    elif typ == KQuery.MONTH:
+    elif typ == Query.MONTH:
         major_loc, major_fm = getMonthLocatorAndFormatter(dates)
-    elif typ == KQuery.QUARTER:
+    elif typ == Query.QUARTER:
         major_loc, major_fm = getMonthLocatorAndFormatter(dates)
-    elif typ == KQuery.HALFYEAR:
+    elif typ == Query.HALFYEAR:
         major_loc, major_fm = getMonthLocatorAndFormatter(dates)
-    elif typ == KQuery.YEAR:
+    elif typ == Query.YEAR:
         major_loc, major_fm = getMonthLocatorAndFormatter(dates)
 
     if major_loc:
@@ -262,7 +261,7 @@ def kplot(kdata, new=True, axes=None, colorup='r', colordown='g', width=0.6, alp
     last_record = kdata[-1]
     color = 'r' if last_record.close > kdata[-2].close else 'g'
     text = u'%s 开:%.2f 高:%.2f 低:%.2f 收:%.2f 涨幅:%.2f%%' % (
-        str(last_record.date.date()), last_record.open, last_record.high, last_record.low, last_record.close, 100 *
+        str(last_record.date), last_record.open, last_record.high, last_record.low, last_record.close, 100 *
         (last_record.close - kdata[-2].close) / kdata[-2].close
     )
     axes.text(
@@ -271,7 +270,7 @@ def kplot(kdata, new=True, axes=None, colorup='r', colordown='g', width=0.6, alp
 
     axes.autoscale_view()
     axes.set_xlim(-1, len(kdata) + 1)
-    #ax_set_locator_formatter(axes, kdata.getDatetimeList(), kdata.get_query().kType)
+    ax_set_locator_formatter(axes, kdata.get_date_list(), kdata.get_query().ktype)
     #draw()
 
 
@@ -314,7 +313,7 @@ def mkplot(kdata, new=True, axes=None, colorup='r', colordown='g', ticksize=3):
     last_record = kdata[-1]
     color = 'r' if last_record.close > kdata[-2].close else 'g'
     text = u'%s 开:%.2f 高:%.2f 低:%.2f 收:%.2f' % (
-        last_record.datetime.number / 10000, last_record.open, last_record.high, last_record.low, last_record.close
+        str(last_record.date), last_record.open, last_record.high, last_record.low, last_record.close
     )
     axes.text(
         0.99, 0.97, text, horizontalalignment='right', verticalalignment='top', transform=axes.transAxes, color=color
@@ -322,7 +321,7 @@ def mkplot(kdata, new=True, axes=None, colorup='r', colordown='g', ticksize=3):
 
     axes.autoscale_view()
     #axes.set_xlim(0, len(kdata))
-    ax_set_locator_formatter(axes, kdata.getDatetimeList(), kdata.get_query().kType)
+    ax_set_locator_formatter(axes, kdata.get_date_list(), kdata.get_query().ktype)
     #draw()
 
 
@@ -481,7 +480,7 @@ def ax_draw_macd(axes, kdata, n1=12, n2=26, n3=9):
     :param int n3: 指标 MACD 的参数3
     """
     macd = MACD(CLOSE(kdata), n1, n2, n3)
-    bmacd, fmacd, smacd = macd.getResult(0), macd.getResult(1), macd.getResult(2)
+    bmacd, fmacd, smacd = macd.get_result(0), macd.get_result(1), macd.get_result(2)
 
     text = 'MACD(%s,%s,%s) DIF:%.2f, DEA:%.2f, BAR:%.2f' % (n1, n2, n3, fmacd[-1], smacd[-1], bmacd[-1])
     axes.text(0.01, 0.97, text, horizontalalignment='left', verticalalignment='top', transform=axes.transAxes)
@@ -518,7 +517,7 @@ def ax_draw_macd2(axes, ref, kdata, n1=12, n2=26, n3=9):
     :param int n3: 指标 MACD 的参数3
     """
     macd = MACD(CLOSE(kdata), n1, n2, n3)
-    bmacd, fmacd, smacd = macd.getResult(0), macd.getResult(1), macd.getResult(2)
+    bmacd, fmacd, smacd = macd.get_result(0), macd.get_result(1), macd.get_result(2)
 
     text = 'MACD(%s,%s,%s) DIF:%.2f, DEA:%.2f, BAR:%.2f' % (n1, n2, n3, fmacd[-1], smacd[-1], bmacd[-1])
     axes.text(0.01, 0.97, text, horizontalalignment='left', verticalalignment='top', transform=axes.transAxes)

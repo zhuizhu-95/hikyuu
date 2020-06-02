@@ -489,63 +489,63 @@ void export_Indicator_build_in(py::module& m) {
     :param data: 输入数据
     :rtype: Indicator)");
 
-    m.def("IKDATA", py::overload_cast<void>(KDATA));
-    m.def("IKDATA", py::overload_cast<const KData&>(KDATA),
-          R"(IKDATA([data])
+    m.def("KDATA", py::overload_cast<void>(KDATA));
+    m.def("KDATA", py::overload_cast<const KData&>(KDATA),
+          R"(KDATA([data])
 
     包装KData成Indicator，用于其他指标计算
 
     :param data: KData 或 具有6个返回结果的Indicator（如KDATA生成的Indicator）
     :return: Indicator)");
 
-    m.def("IOPEN", py::overload_cast<void>(OPEN));
-    m.def("IOPEN", py::overload_cast<const KData&>(OPEN),
-          R"(IOPEN([data])
+    m.def("OPEN", py::overload_cast<void>(OPEN));
+    m.def("OPEN", py::overload_cast<const KData&>(OPEN),
+          R"(OPEN([data])
 
     获取开盘价，包装KData的开盘价成Indicator
     
     :param data: 输入数据（KData 或 Indicator） 
     :return: Indicator)");
 
-    m.def("IHIGH", py::overload_cast<void>(HIGH));
-    m.def("IHIGH", py::overload_cast<const KData&>(HIGH),
-          R"(IHIGH([data])
+    m.def("HIGH", py::overload_cast<void>(HIGH));
+    m.def("HIGH", py::overload_cast<const KData&>(HIGH),
+          R"(HIGH([data])
 
     获取最高价，包装KData的最高价成Indicator
 
     :param data: 输入数据（KData 或 Indicator） 
     :return: Indicator)");
 
-    m.def("ILOW", py::overload_cast<void>(LOW));
-    m.def("ILOW", py::overload_cast<const KData&>(LOW),
-          R"(ILOW([data])
+    m.def("LOW", py::overload_cast<void>(LOW));
+    m.def("LOW", py::overload_cast<const KData&>(LOW),
+          R"(LOW([data])
 
     获取最低价，包装KData的最低价成Indicator
     
     :param data: 输入数据（KData 或 Indicator） 
     :return: Indicator)");
 
-    m.def("ICLOSE", py::overload_cast<void>(CLOSE));
-    m.def("ICLOSE", py::overload_cast<const KData&>(CLOSE),
-          R"(ICLOSE([data])
+    m.def("CLOSE", py::overload_cast<void>(CLOSE));
+    m.def("CLOSE", py::overload_cast<const KData&>(CLOSE),
+          R"(CLOSE([data])
    
     获取收盘价，包装KData的收盘价成Indicator
     
     :param data: 输入数据（KData 或 Indicator）
     :return: Indicator)");
 
-    m.def("IAMO", py::overload_cast<void>(AMO));
-    m.def("IAMO", py::overload_cast<const KData&>(AMO),
-          R"(IAMO([data])
+    m.def("AMO", py::overload_cast<void>(AMO));
+    m.def("AMO", py::overload_cast<const KData&>(AMO),
+          R"(AMO([data])
 
     获取成交金额，包装KData的成交金额成Indicator
     
     :param data: 输入数据（KData 或 Indicator）
     :return: Indicator)");
 
-    m.def("IVOL", py::overload_cast<void>(VOL));
-    m.def("IVOL", py::overload_cast<const KData&>(VOL),
-          R"(IVOL([data])
+    m.def("VOL", py::overload_cast<void>(VOL));
+    m.def("VOL", py::overload_cast<const KData&>(VOL),
+          R"(VOL([data])
 
     获取成交量，包装KData的成交量成Indicator
 

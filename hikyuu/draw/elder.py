@@ -35,7 +35,7 @@
 from pylab import plot
 from numpy import mean
 
-from hikyuu.core import *
+from hikyuu import (constant, Query, CLOSE, EMA, MACD, VIGOR, SAFTYLOSS, CVAL, PRICELIST)
 from .drawplot import (create_figure, show_gcf, ax_draw_macd2, adjust_axes_show, ax_set_locator_formatter)
 
 
@@ -86,7 +86,7 @@ def _draw_ema_pipe(axes, kdata, ema, n=22, w=0.10):
 
 def draw(stock, query=Query(-130), ma_n=22, ma_w='auto', vigor_n=13):
     """绘制亚历山大.艾尔德交易系统图形"""
-    kdata = stock.getKData(query)
+    kdata = stock.get_kdata(query)
     close = CLOSE(kdata)
     ema = EMA(close, ma_n)
     sf = SAFTYLOSS(close, 10, 3, 2.0)
@@ -96,7 +96,6 @@ def draw(stock, query=Query(-130), ma_n=22, ma_w='auto', vigor_n=13):
     kdata.plot(axes=ax1)
     _draw_ema_pipe(ax1, kdata, ema, n=ma_n, w=ma_w)
     sf.plot(axes=ax1, color='y', legend_on=True)
-    #ax1.legend(loc='upper left')
 
     ax_draw_macd2(ax2, ema, kdata)
 
@@ -111,13 +110,11 @@ def draw(stock, query=Query(-130), ma_n=22, ma_w='auto', vigor_n=13):
     lp = int(lmin / lmean)
     for i in range(up):
         CVAL(close, umean * (i + 1)).plot(axes=ax3, color='r', linestyle='--')
-        #ax3.hlines(umean * (i + 1),0,len(kdata),color='r',linestyle='--')
 
     for i in range(lp):
         CVAL(close, lmean * (i + 1)).plot(axes=ax3, color='g', linestyle='--')
-        #ax3.hlines(lmean * (i + 1),0,len(kdata),color='g',linestyle='--')
 
     ax1.set_xlim((0, len(kdata)))
-    ax_set_locator_formatter(ax1, kdata.getDatetimeList(), kdata.getQuery().kType)
+    ax_set_locator_formatter(ax1, kdata.get_date_list(), kdata.get_query().ktype)
     adjust_axes_show([ax1, ax2, ax3])
     return show_gcf()

@@ -80,9 +80,16 @@ void export_Indicator(py::module& m) {
 :param datetime date: 指定日期
 :param int num: 指定的结果集)")
 
-      .def("get_pos", &Indicator::getPos, R"(获取指定日期相应的索引位置
+      .def(
+        "get_pos",
+        [](const Indicator& self, const Datetime& d) {
+            size_t pos = self.getPos(d);
+            return (pos == Null<size_t>()) ? py::none() : py::int_(pos);
+        },
+        R"(获取指定时间对应的索引位置
 
-:param datetime date: 指定日期)")
+:param datetime: 指定的时间
+:return: 对应的索引位置，如果不在数据范围内，则返回 None)")
 
       .def("get_date", &Indicator::getDatetime, "获取指定索引位置的日期")
 

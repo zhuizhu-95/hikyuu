@@ -19,7 +19,7 @@ using namespace hku;
 namespace py = pybind11;
 
 void export_Stock(py::module& m) {
-    py::class_<Stock>(m, "Stock")
+    py::class_<Stock>(m, "Stock", "证券类")
       .def(py::init<>())
       .def(py::init<const string&, const string&, const string&>(), py::arg("market"),
            py::arg("code"), py::arg("name"))
