@@ -8,6 +8,7 @@
 #include <sstream>
 #include <hikyuu/indicator/Indicator.h>
 #include <pybind11/pybind11.h>
+#include <pybind11/operators.h>
 #include "../convert_Datetime.h"
 #include "../pickle_support.h"
 
@@ -167,6 +168,58 @@ void export_Indicator(py::module& m) {
 
                return vector_to_python_list(result);
            })
+
+      .def(py::self + py::self)
+      .def(py::self + price_t())
+      .def(price_t() + py::self)
+
+      .def(py::self - py::self)
+      .def(py::self - price_t())
+      .def(price_t() - py::self)
+
+      .def(py::self * py::self)
+      .def(py::self * price_t())
+      .def(price_t() * py::self)
+
+      .def(py::self / py::self)
+      .def(py::self / price_t())
+      .def(price_t() / py::self)
+
+      .def(py::self % py::self)
+      .def(py::self % price_t())
+      .def(price_t() % py::self)
+
+      .def(py::self == py::self)
+      .def(py::self == price_t())
+      .def(price_t() == py::self)
+
+      .def(py::self != py::self)
+      .def(py::self != price_t())
+      .def(price_t() != py::self)
+
+      .def(py::self >= py::self)
+      .def(py::self >= price_t())
+      .def(price_t() >= py::self)
+
+      .def(py::self <= py::self)
+      .def(py::self <= price_t())
+      .def(price_t() <= py::self)
+
+      .def(py::self > py::self)
+      .def(py::self > price_t())
+      .def(price_t() > py::self)
+
+      .def(py::self < py::self)
+      .def(py::self < price_t())
+      .def(price_t() < py::self)
+
+      .def(py::self & py::self)
+      .def(py::self & price_t())
+      .def(price_t() & py::self)
+
+      .def(py::self | py::self)
+      .def(py::self | price_t())
+      .def(price_t() | py::self)
 
         DEF_PICKLE(Indicator);
 }
