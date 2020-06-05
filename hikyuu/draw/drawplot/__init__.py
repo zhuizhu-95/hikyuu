@@ -29,7 +29,7 @@
 # 1. 20171122, Added by fasiondog
 #===============================================================================
 
-from hikyuu.core import (KData, Indicator)  #SignalBase, ConditionBase, System
+from hikyuu.cpp.core import (KData, Indicator)  #SignalBase, ConditionBase, System
 
 from matplotlib.pylab import gca as mpl_gca
 from matplotlib.pylab import gcf as mpl_gcf

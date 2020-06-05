@@ -33,7 +33,7 @@
 参见：《精明交易者》（2006年 广东经济出版社） 
 """
 
-from hikyuu.core import *
+from hikyuu.cpp.core import *
 from .drawplot import (show_gcf, create_figure, ax_set_locator_formatter, adjust_axes_show, ax_draw_macd)
 
 

@@ -29,7 +29,7 @@
 # 1. 20171122, Added by fasiondog
 #===============================================================================
 
-from hikyuu.core import Query
+from hikyuu.cpp.core import Query
 
 
 def get_draw_title(kdata):

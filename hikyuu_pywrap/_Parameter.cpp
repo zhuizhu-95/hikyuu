@@ -8,6 +8,7 @@
 #include <memory>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
+#include <pybind11/operators.h>
 #include <hikyuu/utilities/Parameter.h>
 #include "_Parameter.h"
 #include "pickle_support.h"
@@ -39,6 +40,10 @@ void export_Parameter(py::module& m) {
       .def("getNameList", &Parameter::getNameList, "Get all the parameter names list")
       .def("getNameValueList", &Parameter::getNameValueList,
            "Return a string, like 'name1=val1,name2=val2,...'")
+
+      .def(py::self == py::self)
+      .def(py::self != py::self)
+      .def(py::self < py::self)
 
         DEF_PICKLE(Parameter);
 }

@@ -32,7 +32,7 @@
 绘制普通K线图 + 成交量（成交金额）
 """
 from hikyuu.util.mylog import escapetime
-from hikyuu.core import *
+from hikyuu.cpp.core import *
 from hikyuu.draw.drawplot import (
     create_figure, get_current_draw_engine, ax_set_locator_formatter, adjust_axes_show, ax_draw_macd, show_gcf
 )

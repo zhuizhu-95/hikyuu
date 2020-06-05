@@ -50,7 +50,9 @@ SOFTWARE.
 
 import os
 from datetime import *
-from .core import *
+from .cpp.core import *
+from .pyindicator import *
+from .talib_wrap import *
 from .draw import *
 
 
@@ -70,6 +72,9 @@ def indicator_iter(indicator):
 KData.__iter__ = KData_iter
 Indicator.__iter__ = indicator_iter
 
+# ------------------------------------------------------------------
+# 数据初始化
+# ------------------------------------------------------------------
 #config_file = os.path.expanduser('~') + "/.hikyuu/hikyuu.ini"
 config_file = "./test_data/hikyuu_win.ini"
 hikyuu_init(config_file)
