@@ -17,9 +17,6 @@ namespace py = pybind11;
 class PyIndicatorImp : public IndicatorImp {
 public:
     using IndicatorImp::IndicatorImp;
-    IndicatorImpPtr operator()(const Indicator& ind) override {
-        PYBIND11_OVERLOAD(IndicatorImpPtr, IndicatorImp, operator(), ind);
-    }
 
     bool check() override {
         PYBIND11_OVERLOAD(bool, IndicatorImp, check, );

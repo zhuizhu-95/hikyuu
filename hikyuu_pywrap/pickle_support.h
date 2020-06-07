@@ -53,10 +53,10 @@ namespace py = pybind11;
           OUTPUT_ARCHIVE oa(os);                                                                   \
           oa << p;                                                                                 \
           std::string tmp(os.str());                                                               \
-          return py::make_tuple(                                                                   \
-            py::handle(PyBytes_FromStringAndSize(tmp.size() ? tmp.data() : 0, tmp.size())));       \
+          return py::make_tuple(py::handle(PyBytes_FromStringAndSize(tmp.data(), tmp.size())));    \
       },                                                                                           \
       [](py::tuple t) {                                                                            \
+          classname result;                                                                        \
           if (len(t) != 1) {                                                                       \
               PyErr_SetObject(                                                                     \
                 PyExc_ValueError,                                                                  \
@@ -65,24 +65,22 @@ namespace py = pybind11;
           }                                                                                        \
           py::object obj = t[0];                                                                   \
           if (py::isinstance<py::str>(obj)) {                                                      \
-              std::string st = t[0].cast<py::str>();                                               \
+              std::string st = obj.cast<py::str>();                                                \
               std::istringstream is(st);                                                           \
               INPUT_ARCHIVE ia(is);                                                                \
-              classname result;                                                                    \
               ia >> result;                                                                        \
-              return result;                                                                       \
           } else if (PyBytes_Check(py::object(t[0]).ptr())) {                                      \
               py::object obj = t[0];                                                               \
               char* data = PyBytes_AsString(obj.ptr());                                            \
               auto num = PyBytes_Size(obj.ptr());                                                  \
               std::istringstream sin(std::string(data, num));                                      \
               INPUT_ARCHIVE ia(sin);                                                               \
-              classname result;                                                                    \
               ia >> result;                                                                        \
               return result;                                                                       \
           } else {                                                                                 \
               throw std::runtime_error("Unable to unpickle, error in input file.");                \
           }                                                                                        \
+          return result;                                                                           \
       }))
 
 #else
