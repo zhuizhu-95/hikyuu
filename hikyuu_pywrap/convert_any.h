@@ -12,6 +12,7 @@
 #include <string>
 #include <pybind11/pybind11.h>
 #include <hikyuu/utilities/Parameter.h>
+#include "convert_Datetime.h"
 
 namespace pybind11 {
 namespace detail {
@@ -24,6 +25,10 @@ public:
      * Conversion part 1 (Python->C++)
      */
     bool load(handle source, bool) {
+        if (source.is_none()) {
+            return false;
+        }
+
         /* Extract PyObject from handle */
         PyObject* src = source.ptr();
 
@@ -57,6 +62,13 @@ public:
                 pybind11_fail("Unable to extract string contents! (invalid type)");
             value = std::string(buffer, (size_t)length);
             return true;
+        }
+
+        try {
+            value = pydatetime_to_Datetime(source);
+            return true;
+        } catch (...) {
+            // do noting;
         }
 
         HKU_THROW_EXCEPTION(std::logic_error,

@@ -42,8 +42,6 @@
 #if HKU_PYTHON_SUPPORT_PICKLE
 #include <string>
 #include <sstream>
-#include <boost/archive/binary_oarchive.hpp>
-#include <boost/archive/binary_iarchive.hpp>
 #include <pybind11/pybind11.h>
 
 namespace py = pybind11;

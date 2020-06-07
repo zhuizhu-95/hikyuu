@@ -50,7 +50,7 @@ def test_Parameter_other_func():
     assert x.get('1') == 2
     assert x.get('2') == 3
 
-    assert x.getNameList() == ['1', '2']
+    assert x.get_name_list() == ['1', '2']
 
     x = Parameter()
     x['int'] = 10

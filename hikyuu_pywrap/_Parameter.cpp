@@ -37,8 +37,8 @@ void export_Parameter(py::module& m) {
       .def("type", &Parameter::type,
            "Get the type name of the specified parameter, return 'string' | 'int' | 'double' | "
            "'bool' | 'Stock' | 'KQuery' | 'KData' | 'PriceList' | 'DatetimeList'")
-      .def("getNameList", &Parameter::getNameList, "Get all the parameter names list")
-      .def("getNameValueList", &Parameter::getNameValueList,
+      .def("get_name_list", &Parameter::getNameList, "Get all the parameter names list")
+      .def("get_name_value_list", &Parameter::getNameValueList,
            "Return a string, like 'name1=val1,name2=val2,...'")
 
       .def(py::self == py::self)
