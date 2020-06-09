@@ -53,7 +53,7 @@ string print_Indicator(const Indicator& ind) {
 void export_Indicator(py::module& m) {
     py::class_<Indicator>(m, "Indicator", "技术指标")
       .def(py::init<>())
-      .def(py::init<IndicatorImpPtr>())
+      .def(py::init<IndicatorImpPtr>(), py::keep_alive<1, 2>())
 
       .def("__str__", print_Indicator)
       .def("__repr__", Indicator_to_string)

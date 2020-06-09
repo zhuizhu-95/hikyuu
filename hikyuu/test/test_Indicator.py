@@ -9,11 +9,23 @@ class AddIndicator(IndicatorImp):
         self._ready_buffer(indicator.size(), 1)
         for i in range(len(indicator)):
             self._set(indicator[i] + 1, i)
+        self.value = 1
+        self.ind = indicator
+
+    def check(self):
+        print("check")
+        return True
 
     def _calculate(self, ind):
         print("******")
-        for x in ind:
-            self._set(x + 1)
+        for i in range(len(ind)):
+            self._set(ind[i] + 1, i)
+
+    def _clone(self):
+        print("=======")
+        p = AddIndicator(self.ind)
+        p.value = self.value + 1
+        return p
 
 
 def test_PythonIndicator():

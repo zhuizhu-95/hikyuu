@@ -73,7 +73,7 @@ PYBIND11_MODULE(core, m) {
     export_StockWeight(m);
     export_KData(m);
 
-    export_Indicator(m);
     export_IndicatorImp(m);
+    export_Indicator(m);
     export_Indicator_build_in(m);
 }

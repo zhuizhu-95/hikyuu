@@ -27,7 +27,17 @@ public:
     }
 
     IndicatorImpPtr _clone() override {
-        PYBIND11_OVERLOAD(IndicatorImpPtr, IndicatorImp, _clone, );
+        // 直接使用 pybind11 重载 _clone，在 C++ 中会丢失 python 中的类型
+        // 参考：https://github.com/pybind/pybind11/issues/1049 进行修改
+        // PYBIND11_OVERLOAD(IndicatorImpPtr, IndicatorImp, _clone, );
+        auto self = py::cast(this);
+        auto cloned = self.attr("_clone")();
+
+        auto keep_python_state_alive = std::make_shared<py::object>(cloned);
+        auto ptr = cloned.cast<PyIndicatorImp*>();
+
+        // aliasing shared_ptr: points to `A_trampoline* ptr` but refcounts the Python object
+        return std::shared_ptr<IndicatorImp>(keep_python_state_alive, ptr);
     }
 
     bool isNeedContext() const override {
@@ -36,7 +46,7 @@ public:
 };
 
 void export_IndicatorImp(py::module& m) {
-    py::class_<IndicatorImp, PyIndicatorImp, IndicatorImpPtr>(m, "IndicatorImp")
+    py::class_<IndicatorImp, IndicatorImpPtr, PyIndicatorImp>(m, "IndicatorImp")
       .def(py::init<>())
       .def(py::init<const string&>())
       .def(py::init<const string&, size_t>())
@@ -55,11 +65,7 @@ void export_IndicatorImp(py::module& m) {
       .def("_ready_buffer", &IndicatorImp::_readyBuffer)
       .def("get_result_number", &IndicatorImp::getResultNumber)
       .def("get_result_as_price_list", &IndicatorImp::getResultAsPriceList)
-      .def("calculate", &IndicatorImp::calculate)
       .def("check", &IndicatorImp::check)
-      .def("clone", &IndicatorImp::clone)
       .def("_calculate", &IndicatorImp::_calculate)
-      .def("__call__", &IndicatorImp::operator())
-      .def("_clone", &IndicatorImp::_clone)
-      .def("isNeedContext", &IndicatorImp::isNeedContext);
+      .def("is_need_context", &IndicatorImp::isNeedContext);
 }
