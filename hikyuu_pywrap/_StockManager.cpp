@@ -87,7 +87,8 @@ CSV文件第一行为标题，需含有 Datetime（或Date、日期）、OPEN（
 :param int precision: 价格精度，默认2
 :param int minTradeNumber: 单笔最小交易量，默认1
 :param int maxTradeNumber: 单笔最大交易量，默认1000000
-:return: 加入的Stock)")
+:return: 加入的Stock)",
+        py::keep_alive<1, 2>())
 
       .def("remove_temp_csv_Stock", &StockManager::removeTempCsvStock,
            R"(移除增加的临时Stock

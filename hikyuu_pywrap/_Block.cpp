@@ -45,13 +45,15 @@ void export_Block(py::module& m) {
       .def("add", py::overload_cast<const Stock&>(&Block::add), R"(加入指定的证券
 
 :param Stock stock: 待加入的证券
-:return: 是否成功加入)")
+:return: 是否成功加入)",
+           py::keep_alive<1, 2>())
 
       .def("add", py::overload_cast<const string&>(&Block::add),
            R"(根据"市场简称证券代码"加入指定的证券
 
 :param str market_code: 市场简称证券代码
-:return: 是否成功加入)")
+:return: 是否成功加入)",
+           py::keep_alive<1, 2>())
 
       .def("remove", py::overload_cast<const Stock&>(&Block::remove), R"(移除指定证券
 
