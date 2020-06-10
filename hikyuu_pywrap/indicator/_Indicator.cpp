@@ -35,15 +35,18 @@ string print_Indicator(const Indicator& ind) {
         auto total = ind.size();
         if (total <= 20) {
             for (auto i = 0; i < total; ++i) {
-                buf << ind.getDatetime(i).str() << "  " << ind.get(i) << std::endl;
+                buf << (ind.getDatetime(i) == Null<Datetime>() ? "None" : ind.getDatetime(i).str())
+                    << "  " << ind.get(i) << std::endl;
             }
         } else {
             for (auto i = 0; i < 10; ++i) {
-                buf << ind.getDatetime(i).str() << "  " << ind.get(i) << std::endl;
+                buf << (ind.getDatetime(i) == Null<Datetime>() ? "None" : ind.getDatetime(i).str())
+                    << "  " << ind.get(i) << std::endl;
             }
             buf << "..." << std::endl;
             for (auto i = total - 10; i < total; ++i) {
-                buf << ind.getDatetime(i).str() << "  " << ind.get(i) << std::endl;
+                buf << (ind.getDatetime(i) == Null<Datetime>() ? "None" : ind.getDatetime(i).str())
+                    << "  " << ind.get(i) << std::endl;
             }
         }
     }
@@ -168,6 +171,22 @@ void export_Indicator(py::module& m) {
                }
 
                return vector_to_python_list(result);
+           })
+
+      .def("items",
+           [](const Indicator& ind) {
+               py::list items;
+               size_t result_num = ind.getResultNumber();
+               size_t total = ind.size();
+               for (size_t i = 0; i < total; ++i) {
+                   py::list item;
+                   item.append(ind.getDatetime(i));
+                   for (size_t j = 0; j < result_num; ++j) {
+                       item.append(ind.get(i, j));
+                   }
+                   items.append(item);
+               }
+               return items;
            })
 
       .def(py::self + py::self)

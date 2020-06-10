@@ -13,16 +13,13 @@ class AddIndicator(IndicatorImp):
         self.ind = indicator
 
     def check(self):
-        print("check")
         return True
 
     def _calculate(self, ind):
-        print("******")
         for i in range(len(ind)):
             self._set(ind[i] + 1, i)
 
     def _clone(self):
-        print("=======")
         p = AddIndicator(self.ind)
         p.value = self.value + 1
         return p

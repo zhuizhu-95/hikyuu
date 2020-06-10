@@ -98,12 +98,12 @@ try:
                 'volume': ind.get_result(5).to_np()
             }
 
-        params = self.getParameter()
-        param_names = params.getNameList()
+        params = self.get_parameter()
+        param_names = params.get_name_list()
         func_params = {}
         for name in param_names:
             if name != "kdata":
-                func_params[name] = self.getParam(name)
+                func_params[name] = self.get_param(name)
 
         self._tafunc.set_parameters(func_params)
 
@@ -112,14 +112,14 @@ try:
             for i, val in enumerate(outputs):
                 if not np.isnan(val):
                     self._set(float(val), i)
-            self.setDiscard(self._tafunc.lookback)
+            self.set_discard(self._tafunc.lookback)
 
         else:
             for i, out in enumerate(outputs):
                 for j, val in enumerate(out):
                     if not np.isnan(val):
                         self._set(float(val), j, i)
-            self.setDiscard(self._tafunc.lookback)
+            self.set_discard(self._tafunc.lookback)
 
     def check_all_true(self):
         return True
