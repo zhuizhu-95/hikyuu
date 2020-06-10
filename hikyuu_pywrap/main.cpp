@@ -37,6 +37,8 @@ void export_Indicator(py::module& m);
 void export_IndicatorImp(py::module& m);
 void export_Indicator_build_in(py::module& m);
 
+void export_trade_manage(py::module& m);
+
 PYBIND11_MODULE(core, m) {
     m.def(
       "get_date_range",
@@ -76,4 +78,6 @@ PYBIND11_MODULE(core, m) {
     export_IndicatorImp(m);
     export_Indicator(m);
     export_Indicator_build_in(m);
+
+    export_trade_manage(m);
 }
