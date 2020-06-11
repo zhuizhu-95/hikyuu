@@ -10,8 +10,11 @@
 #define HIKYUU_PYTHON_BIND_UTILS_H
 
 #include <pybind11/pybind11.h>
+#include <pybind11/stl_bind.h>
 #include <vector>
 #include <string>
+
+PYBIND11_MAKE_OPAQUE(std::vector<double>);
 
 namespace py = pybind11;
 

@@ -5,10 +5,7 @@
  *      Author: fasiondog
  */
 
-#include <pybind11/stl_bind.h>
-#include <vector>
-
-PYBIND11_MAKE_OPAQUE(std::vector<double>);
+#include "pybind_utils.h"
 
 namespace py = pybind11;
 
