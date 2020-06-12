@@ -30,7 +30,7 @@ void export_TradeRecord(py::module& m) {
       .value("BUSINESS_RETURN_STOCK", BUSINESS_RETURN_STOCK, "归还证券资产")
       //.value("BUSINESS_SELL_SHORT", BUSINESS_SELL_SHORT, "卖空")
       //.value("BUSINESS_BUY_SHORT", BUSINESS_BUY_SHORT, "卖空后回补")
-      .value("INVALID_BUSINESS", INVALID_BUSINESS, "无效类型")
+      .value("BUSINESS_INVALID", BUSINESS_INVALID, "无效业务类型")
       .export_values();
 
     m.def("getBusinessName", getBusinessName, "获取业务名称，用于打印输出");

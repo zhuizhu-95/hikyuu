@@ -22,8 +22,8 @@ void export_trade_manage_buildin(py::module& m) {
     创建交易管理模块，管理帐户的交易记录及资金使用情况
 
     :param datetime date:  账户建立日期
-    :param float initcash:    初始资金
-    :param TradeCost costfunc: 交易成本算法
+    :param float init_cash:    初始资金
+    :param TradeCost cost_func: 交易成本算法
     :param string name:        账户名称
     :rtype: TradeManager)");
 
