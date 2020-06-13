@@ -28,11 +28,11 @@ void export_trade_sys(py::module& m) {
     export_Condition(m);
     export_Environment(m);
     export_MoneyManager(m);
-    export_Portfolio(m);
     export_Profitgoal(m);
     export_Selector(m);
     export_Signal(m);
     export_Slippage(m);
     export_Stoploss(m);
     export_System(m);
+    export_Portfolio(m);
 }
