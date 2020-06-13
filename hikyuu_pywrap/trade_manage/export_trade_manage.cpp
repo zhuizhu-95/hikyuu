@@ -18,6 +18,7 @@ void export_OrderBroker(py::module& m);
 void export_TradeRecord(py::module& m);
 void export_TradeCost(py::module& m);
 void export_TradeManager(py::module& m);
+void export_Performance(py::module& m);
 void export_trade_manage_buildin(py::module& m);
 
 void export_trade_manage(py::module& m) {
@@ -31,6 +32,8 @@ void export_trade_manage(py::module& m) {
     export_OrderBroker(m);
     export_TradeCost(m);
     export_TradeManager(m);
+
+    export_Performance(m);
 
     export_trade_manage_buildin(m);
 }

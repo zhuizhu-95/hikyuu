@@ -20,22 +20,10 @@ string TradeCostBase_to_string(const TradeCostPtr& cost) {
 }
 
 class PyTradeCostBase : public TradeCostBase {
+    PY_CLONE(PyTradeCostBase, TradeCostBase)
+
 public:
     using TradeCostBase::TradeCostBase;
-
-    TradeCostPtr _clone() override {
-        // 直接使用 pybind11 重载 _clone，在 C++ 中会丢失 python 中的类型
-        // 参考：https://github.com/pybind/pybind11/issues/1049 进行修改
-        // PYBIND11_OVERLOAD(IndicatorImpPtr, IndicatorImp, _clone, );
-        auto self = py::cast(this);
-        auto cloned = self.attr("_clone")();
-
-        auto keep_python_state_alive = std::make_shared<py::object>(cloned);
-        auto ptr = cloned.cast<PyTradeCostBase*>();
-
-        // aliasing shared_ptr: points to `A_trampoline* ptr` but refcounts the Python object
-        return TradeCostPtr(keep_python_state_alive, ptr);
-    }
 
     CostRecord getBuyCost(const Datetime& datetime, const Stock& stock, price_t price,
                           double num) const override {

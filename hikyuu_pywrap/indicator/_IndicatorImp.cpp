@@ -15,6 +15,8 @@ using namespace hku;
 namespace py = pybind11;
 
 class PyIndicatorImp : public IndicatorImp {
+    PY_CLONE(PyIndicatorImp, IndicatorImp)
+
 public:
     using IndicatorImp::IndicatorImp;
 
@@ -24,20 +26,6 @@ public:
 
     void _calculate(const Indicator& ind) override {
         PYBIND11_OVERLOAD(void, IndicatorImp, _calculate, ind);
-    }
-
-    IndicatorImpPtr _clone() override {
-        // 直接使用 pybind11 重载 _clone，在 C++ 中会丢失 python 中的类型
-        // 参考：https://github.com/pybind/pybind11/issues/1049 进行修改
-        // PYBIND11_OVERLOAD(IndicatorImpPtr, IndicatorImp, _clone, );
-        auto self = py::cast(this);
-        auto cloned = self.attr("_clone")();
-
-        auto keep_python_state_alive = std::make_shared<py::object>(cloned);
-        auto ptr = cloned.cast<PyIndicatorImp*>();
-
-        // aliasing shared_ptr: points to `A_trampoline* ptr` but refcounts the Python object
-        return std::shared_ptr<IndicatorImp>(keep_python_state_alive, ptr);
     }
 
     bool isNeedContext() const override {
