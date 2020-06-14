@@ -29,7 +29,7 @@
 # 1. 20171122, Added by fasiondog
 #===============================================================================
 
-from hikyuu.cpp.core import (KData, Indicator)  #SignalBase, ConditionBase, System
+from hikyuu.cpp.core import (KData, Indicator, SignalBase, ConditionBase, System)
 
 from matplotlib.pylab import gca as mpl_gca
 from matplotlib.pylab import gcf as mpl_gcf
@@ -74,10 +74,10 @@ def use_draw_with_matplotlib():
     Indicator.plot = mpl_iplot
     Indicator.bar = mpl_ibar
 
-    #SignalBase.plot = mpl_sgplot
-    #ConditionBase.plot = mpl_cnplot
+    SignalBase.plot = mpl_sgplot
+    ConditionBase.plot = mpl_cnplot
 
-    #System.plot = mpl_sysplot
+    System.plot = mpl_sysplot
 
 
 def gca():

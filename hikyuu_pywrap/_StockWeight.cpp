@@ -30,13 +30,13 @@ void export_StockWeight(py::module& m) {
       .def("__repr__", StockWeight_to_string)
 
       .def_property_readonly("date", &StockWeight::datetime, "权息日期")
-      .def_property_readonly("count_as_gift", &StockWeight::countAsGift, "每10股送X股")
-      .def_property_readonly("count_for_sell", &StockWeight::countForSell, "每10股配X股")
-      .def_property_readonly("price_for_sell", &StockWeight::priceForSell, "配股价")
+      .def_property_readonly("countAsGift", &StockWeight::countAsGift, "每10股送X股")
+      .def_property_readonly("countForSell", &StockWeight::countForSell, "每10股配X股")
+      .def_property_readonly("priceForSell", &StockWeight::priceForSell, "配股价")
       .def_property_readonly("bonus", &StockWeight::bonus, "每10股红利")
       .def_property_readonly("increasement", &StockWeight::increasement, "每10股转增X股")
-      .def_property_readonly("total_count", &StockWeight::totalCount, "总股本（万股）")
-      .def_property_readonly("free_count", &StockWeight::freeCount, "流通股（万股）")
+      .def_property_readonly("totalCount", &StockWeight::totalCount, "总股本（万股）")
+      .def_property_readonly("freeCount", &StockWeight::freeCount, "流通股（万股）")
 
         DEF_PICKLE(StockWeight);
 }

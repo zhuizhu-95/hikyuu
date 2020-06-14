@@ -41,7 +41,7 @@ void export_IndicatorImp(py::module& m) {
 
         - _clone() -> IndicatorImp
         - _calculate(ind) ：指标计算
-        - is_need_context(bool) ：是否依赖上下文)")
+        - isNeedContext(bool) ：是否依赖上下文)")
       .def(py::init<>())
 
       .def(py::init<const string&>(), R"(
@@ -55,11 +55,11 @@ void export_IndicatorImp(py::module& m) {
                     py::overload_cast<const string&>(&IndicatorImp::name), "指标名称")
       .def_property_readonly("discard", &IndicatorImp::discard, "抛弃点数")
 
-      .def("get_parameter", &IndicatorImp::getParameter, py::return_value_policy::reference)
-      .def("get_param", &IndicatorImp::getParam<boost::any>)
-      .def("set_param", &IndicatorImp::setParam<boost::any>)
+      .def("getParameter", &IndicatorImp::getParameter, py::return_value_policy::reference)
+      .def("getParam", &IndicatorImp::getParam<boost::any>)
+      .def("setParam", &IndicatorImp::setParam<boost::any>)
 
-      .def("set_discard", &IndicatorImp::setDiscard, "设置需抛弃的数量")
+      .def("setDiscard", &IndicatorImp::setDiscard, "设置需抛弃的数量")
 
       .def(
         "_set", &IndicatorImp::_set, py::arg("val"), py::arg("pos"), py::arg("num") = 0,
@@ -69,17 +69,17 @@ void export_IndicatorImp(py::module& m) {
     :param int pos: 索引位置
     :param int num: 所属结果集)")
 
-      .def("_ready_buffer", &IndicatorImp::_readyBuffer, R"(分配数据缓存区域
+      .def("_readyBuffer", &IndicatorImp::_readyBuffer, R"(分配数据缓存区域
       
     :param int len: 缓存区长度
     :param int result_num: 结果集数量)")
 
-      .def("get_result_number", &IndicatorImp::getResultNumber, "获取结果集数量")
+      .def("getResultNumber", &IndicatorImp::getResultNumber, "获取结果集数量")
 
-      .def("get_result_as_price_list", &IndicatorImp::getResultAsPriceList, "获取指定的结果集")
+      .def("getResultAsPriceList", &IndicatorImp::getResultAsPriceList, "获取指定的结果集")
 
       .def("check", &IndicatorImp::check, "子类可选接口, 指标参数检查")
       .def("_calculate", &IndicatorImp::_calculate, "子类实现接口，实际指标计算")
-      .def("is_need_context", &IndicatorImp::isNeedContext,
+      .def("isNeedContext", &IndicatorImp::isNeedContext,
            "子类可选接口，指明该指标是否依赖上下文。默认为不依赖。");
 }

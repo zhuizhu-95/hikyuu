@@ -25,7 +25,7 @@ void export_MarketInfo(py::module& m) {
                              "市场说明信息")
       .def_property_readonly("code", &MarketInfo::code, py::return_value_policy::copy,
                              "该市场对应的指数代码")
-      .def_property_readonly("last_date", &MarketInfo::lastDate, "该市场数据的最后更新日期")
+      .def_property_readonly("lastDate", &MarketInfo::lastDate, "该市场数据的最后更新日期")
 
         DEF_PICKLE(MarketInfo);
 }

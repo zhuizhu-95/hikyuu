@@ -69,6 +69,9 @@ void export_Profitgoal(py::module& m) {
       .def_property("tm", &ProfitGoalBase::getTM, &ProfitGoalBase::setTM, "关联交易管理账户")
       .def_property("to", &ProfitGoalBase::getTO, &ProfitGoalBase::setTO, "关联交易对象")
 
+      .def("getTO", &ProfitGoalBase::getTO, "获取交易对象")
+      .def("setTO", &ProfitGoalBase::setTO, "设置交易对象")
+
       .def("getParam", &ProfitGoalBase::getParam<boost::any>, "获取指定的参数")
       .def("setParam", &ProfitGoalBase::setParam<boost::any>, "设置参数")
       .def("haveParam", &ProfitGoalBase::haveParam, "是否存在指定参数")

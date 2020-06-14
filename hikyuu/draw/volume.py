@@ -40,7 +40,7 @@ from hikyuu.draw.drawplot import (
 
 def draw(stock, query=Query(-130), ma1_n=5, ma2_n=10, ma3_n=20, ma4_n=60, ma5_n=100, vma1_n=5, vma2_n=10):
     """绘制普通K线图 + 成交量（成交金额）"""
-    kdata = stock.get_kdata(query)
+    kdata = stock.getKData(query)
     close = CLOSE(kdata, )
     ma1 = MA(close, ma1_n)
     ma2 = MA(close, ma2_n)
@@ -93,7 +93,7 @@ def draw(stock, query=Query(-130), ma1_n=5, ma2_n=10, ma3_n=20, ma4_n=60, ma5_n=
 
 def draw2(stock, query=Query(-130), ma1_n=7, ma2_n=20, ma3_n=30, ma4_n=42, ma5_n=100, vma1_n=5, vma2_n=10):
     """绘制普通K线图 + 成交量（成交金额）+ MACD"""
-    kdata = stock.get_kdata(query)
+    kdata = stock.getKData(query)
     close = CLOSE(kdata)
     ma1 = MA(close, ma1_n)
     ma2 = MA(close, ma2_n)

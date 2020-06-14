@@ -10,14 +10,11 @@
 #include <hikyuu/trade_manage/OrderBrokerBase.h>
 #include "../convert_Datetime.h"
 #include "../_Parameter.h"
+#include "../pybind_utils.h"
 #include "../pickle_support.h"
 
 using namespace hku;
 namespace py = pybind11;
-
-string OrderBrokerBase_to_string(const string& broker) {
-    return fmt::format("{}", broker);
-}
 
 class PyOrderBrokerBase : public OrderBrokerBase {
 public:
@@ -49,8 +46,8 @@ void export_OrderBroker(py::module& m) {
       .def(py::init<const string&>(), R"(
     :param str name: 代理名称)")
 
-      .def("__str__", OrderBrokerBase_to_string)
-      .def("__repr__", OrderBrokerBase_to_string)
+      .def("__str__", to_py_str<OrderBrokerBase>)
+      .def("__repr__", to_py_str<OrderBrokerBase>)
 
       .def_property("name", py::overload_cast<void>(&OrderBrokerBase::name, py::const_),
                     py::overload_cast<const string&>(&OrderBrokerBase::name), "名称（可读写）")

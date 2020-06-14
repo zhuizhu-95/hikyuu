@@ -6,7 +6,7 @@ from hikyuu import *
 class AddIndicator(IndicatorImp):
     def __init__(self, indicator):
         super(AddIndicator, self).__init__("AddIndicator")
-        self._ready_buffer(indicator.size(), 1)
+        self._readyBuffer(indicator.size(), 1)
         for i in range(len(indicator)):
             self._set(indicator[i] + 1, i)
         self.value = 1

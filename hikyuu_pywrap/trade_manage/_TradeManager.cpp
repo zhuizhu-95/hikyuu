@@ -43,21 +43,21 @@ void export_TradeManager(py::module& m) {
 
       .def_property("name", py::overload_cast<>(&TradeManager::name, py::const_),
                     py::overload_cast<const string&>(&TradeManager::name), "名称")
-      .def_property_readonly("init_cash", &TradeManager::initCash, "初始资金")
-      .def_property_readonly("current_cash", &TradeManager::currentCash, "返回当前现金")
-      .def_property_readonly("init_date", &TradeManager::initDatetime, "账户建立日期")
-      .def_property_readonly("first_date", &TradeManager::firstDatetime,
+      .def_property_readonly("initCash", &TradeManager::initCash, "初始资金")
+      .def_property_readonly("currentCash", &TradeManager::currentCash, "返回当前现金")
+      .def_property_readonly("initDatetime", &TradeManager::initDatetime, "账户建立日期")
+      .def_property_readonly("firstDatetime", &TradeManager::firstDatetime,
                              "第一笔买入交易发生日期，如未发生交易返回 None")
-      .def_property_readonly("last_date", &TradeManager::lastDatetime,
+      .def_property_readonly("lastDatetime", &TradeManager::lastDatetime,
                              "最后一笔交易日期，注意和交易类型无关，如未发生交易返回账户建立日期")
       .def_property_readonly("reinvest", &TradeManager::reinvest,
                              R"(红利/股息/送股再投资标志，同公共参数 "reinvest")")
       .def_property_readonly("precision", &TradeManager::precision,
                              R"(价格精度，同公共参数"precision")")
-      .def_property("cost_func", py::overload_cast<void>(&TradeManager::costFunc, py::const_),
+      .def_property("costFunc", py::overload_cast<void>(&TradeManager::costFunc, py::const_),
                     py::overload_cast<const TradeCostPtr&>(&TradeManager::costFunc), "交易成本算法")
 
-      .def_property("broke_last_date", &TradeManager::getBrokerLastDatetime,
+      .def_property("getBrokerLastDatetime", &TradeManager::getBrokerLastDatetime,
                     &TradeManager::setBrokerLastDatetime,
                     R"(实际开始订单代理操作的时刻。
         
@@ -67,7 +67,7 @@ void export_TradeManager(py::module& m) {
      买入/卖出指令的时刻进行控制，会导致代理发送错误的指令。此时，需要指定在某一个时刻之后，
      才允许指定订单代理的买入/卖出操作。属性 brokeLastDatetime 即用于指定该时刻。)")
 
-      .def("get_param", &TradeManager::getParam<boost::any>, R"(get_param(self, name)
+      .def("getParam", &TradeManager::getParam<boost::any>, R"(getParam(self, name)
 
     获取指定的参数
     
@@ -75,43 +75,36 @@ void export_TradeManager(py::module& m) {
     :return: 参数值
     :raises out_of_range: 无此参数)")
 
-      .def("set_param", &TradeManager::setParam<boost::any>, R"(setParam(self, name, value)
-    
-    设置参数
+      .def("setParam", &TradeManager::setParam<boost::any>, R"(设置参数
         
     :param str name: 参数名称
     :param value: 参数值
     :type value: int | bool | float | string
     :raises logic_error: Unsupported type! 不支持的参数类型)")
 
-      .def("have_param", &TradeManager::haveParam)
+      .def("haveParam", &TradeManager::haveParam)
 
       .def("reset", &TradeManager::reset, "复位，清空交易、持仓记录")
       .def("clone", &TradeManager::clone, "克隆（深复制）实例")
 
-      .def("reg_broker", &TradeManager::regBroker, py::keep_alive<1, 2>(),
-           R"(reg_broker(self, broker)
-    
-    注册订单代理。可执行多次该命令注册多个订单代理。
+      .def("regBroker", &TradeManager::regBroker, py::keep_alive<1, 2>(),
+           R"(注册订单代理。可执行多次该命令注册多个订单代理。
         
     :param OrderBrokerBase broker: 订单代理实例)")
 
-      .def("clear_broker", &TradeManager::clearBroker, "清空所有已注册订单代理")
+      .def("clearBroker", &TradeManager::clearBroker, "清空所有已注册订单代理")
 
       //.def("getMarginRate", &TradeManager::getMarginRate)
-      .def("have", &TradeManager::have, R"(have(self, stock)
-    
-    当前是否持有指定的证券
+      .def("have", &TradeManager::have, R"(当前是否持有指定的证券
         
     :param Stock stock: 指定证券
     :rtype: bool)")
 
-      .def("get_stock_number", &TradeManager::getStockNumber,
+      .def("getStockNumber", &TradeManager::getStockNumber,
            "当前持有的证券种类数量，即当前持有几只股票（非各个股票的持仓数）")
       //.def("getShortStockNumber", &TradeManager::getShortStockNumber)
-      .def("get_hold_number", &TradeManager::getHoldNumber, R"(getHoldNumber(self, datetime, stock)
-
-    获取指定时刻指定证券的持有数量
+      .def("getHoldNumber", &TradeManager::getHoldNumber,
+           R"(获取指定时刻指定证券的持有数量
         
     :param Datetime datetime: 指定时刻
     :param Stock stock: 指定的证券
@@ -119,41 +112,37 @@ void export_TradeManager(py::module& m) {
       //.def("getShortHoldNumber", &TradeManager::getShortHoldNumber)
 
       .def(
-        "get_trade_list",
+        "getTradeList",
         [](const TradeManager& tm, const Datetime& start, const Datetime& end) {
             return vector_to_python_list(tm.getTradeList(start, end));
         },
         py::arg("start") = Datetime::min(), py::arg("end") = Datetime(),
-        R"(get_trade_list(self, start, end)
-    
-    获取交易记录，未指定参数时，获取全部交易记录
+        R"(获取交易记录，未指定参数时，获取全部交易记录
         
     :param datetime start: 起始日期
     :param datetime end: 结束日期
     :rtype: list)")
 
       .def(
-        "get_position_list",
+        "getPositionList",
         [](const TradeManager& tm) { return vector_to_python_list(tm.getPositionList()); },
         "获取当前全部持仓记录")
 
       .def(
-        "get_history_position_list",
+        "getHistoryPositionList",
         [](const TradeManager& tm) { return vector_to_python_list(tm.getHistoryPositionList()); },
         "获取全部历史持仓记录，即已平仓记录")
 
-      .def("get_position", &TradeManager::getPosition, R"(get_position(self, stock)
-
-    获取指定证券的当前持仓记录，如当前未持有该票，返回PositionRecord()
+      .def(
+        "getPosition", &TradeManager::getPosition,
+        R"(获取指定证券的当前持仓记录，如当前未持有该票，返回PositionRecord()
         
     :param Stock stock: 指定的证券
     :rtype: PositionRecord)")
 
-      .def("get_buy_cost", &TradeManager::getBuyCost, py::arg("date"), py::arg("stock"),
+      .def("getBuyCost", &TradeManager::getBuyCost, py::arg("date"), py::arg("stock"),
            py::arg("price"), py::arg("num"),
-           R"(get_buy_cost(self, date, stock, price, num)
-    
-    计算买入成本
+           R"(计算买入成本
         
     :param datetime date: 交易时间
     :param Stock stock:   交易的证券
@@ -161,11 +150,9 @@ void export_TradeManager(py::module& m) {
     :param int num:       买入数量
     :rtype: CostRecord)")
 
-      .def("get_sell_cost", &TradeManager::getSellCost, py::arg("date"), py::arg("stock"),
+      .def("getSellCost", &TradeManager::getSellCost, py::arg("date"), py::arg("stock"),
            py::arg("price"), py::arg("num"),
-           R"(get_sell_cost(self, date, stock, price, num)
-    
-    计算卖出成本
+           R"(计算卖出成本
 
     :param datetime date: 交易时间
     :param Stock stock:   交易的证券
@@ -178,47 +165,39 @@ void export_TradeManager(py::module& m) {
       //.def("getBorrowStockCost", &TradeManager::getBorrowStockCost)
       //.def("getReturnStockCost", &TradeManager::getReturnStockCost)
 
-      .def("cash", &TradeManager::cash, py::arg("date"), py::arg("ktype") = KQuery::DAY,
-           R"(cash(self, date[, ktype=KQuery.KType.DAY])
-    
-    获取指定日期的现金。（注：如果不带日期参数，无法根据权息信息调整持仓。）
+      .def(
+        "cash", &TradeManager::cash, py::arg("date"), py::arg("ktype") = KQuery::DAY,
+        R"(获取指定日期的现金。（注：如果不带日期参数，无法根据权息信息调整持仓。）
         
     :param datetime date: 指定时刻
     :param ktype: K线类型
     :rtype: float)")
 
-      .def("get_funds", py::overload_cast<KQuery::KType>(&TradeManager::getFunds, py::const_),
-           py::arg("ktype") = KQuery::DAY)
-      .def("get_funds", py::overload_cast<const Datetime&, KQuery::KType>(&TradeManager::getFunds),
-           py::arg("date"), py::arg("ktype") = KQuery::DAY, R"(getFunds(self[,ktype = KQuery.DAY])
-    
-    获取账户当前时刻的资产详情
+      .def("getFunds", py::overload_cast<KQuery::KType>(&TradeManager::getFunds, py::const_),
+           py::arg("ktype") = KQuery::DAY, R"(获取账户当前时刻的资产详情
         
     :param KQuery.KType ktype: K线类型
-    :rtype: FundsRecord
-    
-getFunds(self, datetime, [ktype = KQuery.DAY])
-    
-    获取指定时刻的资产市值详情
+    :rtype: FundsRecord)")
+
+      .def("getFunds", py::overload_cast<const Datetime&, KQuery::KType>(&TradeManager::getFunds),
+           py::arg("date"), py::arg("ktype") = KQuery::DAY,
+           R"(获取指定时刻的资产市值详情
         
     :param Datetime datetime:  指定时刻
     :param KQuery.KType ktype: K线类型
     :rtype: FundsRecord )")
 
-      .def("get_funds_curve", &TradeManager::getFundsCurve, py::arg("dates"),
-           py::arg("ktype") = KQuery::DAY, R"(getFundsCurve(self, dates[, ktype = KQuery.DAY])
-    
-    获取资产净值曲线
+      .def("getFundsCurve", &TradeManager::getFundsCurve, py::arg("dates"),
+           py::arg("ktype") = KQuery::DAY, R"(获取资产净值曲线
         
     :param list dates: 日期列表，根据该日期列表获取其对应的资产净值曲线
     :param Query.KType ktype: K线类型，必须与日期列表匹配
     :return: 资产净值列表
     :rtype: list)")
 
-      .def("get_profit_curve", &TradeManager::getProfitCurve, py::arg("dates"),
-           py::arg("ktype") = KQuery::DAY, R"(getProfitCurve(self, dates[, ktype = Query.DAY])
-    
-    获取收益曲线，即扣除历次存入资金后的资产净值曲线
+      .def("getProfitCurve", &TradeManager::getProfitCurve, py::arg("dates"),
+           py::arg("ktype") = KQuery::DAY,
+           R"(获取收益曲线，即扣除历次存入资金后的资产净值曲线
         
     :param list dates: 日期列表，根据该日期列表获取其对应的收益曲线，应为递增顺序
     :param Query.KType ktype: K线类型，必须与日期列表匹配
@@ -286,7 +265,7 @@ getFunds(self, datetime, [ktype = KQuery.DAY])
     :param SystemPart part:  交易指示来源
     :rtype: TradeRecord)")
 
-      .def("add_trade_record", &TradeManager::addTradeRecord, R"(addTradeRecord(self, tr)
+      .def("addTradeRecord", &TradeManager::addTradeRecord, R"(addTradeRecord(self, tr)
 
     直接加入交易记录，如果加入初始化账户记录，将清除全部已有交易及持仓记录。
 

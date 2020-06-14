@@ -8,21 +8,18 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/operators.h>
 #include <hikyuu/trade_manage/FundsRecord.h>
+#include "../pybind_utils.h"
 #include "../pickle_support.h"
 
 using namespace hku;
 namespace py = pybind11;
 
-std::string FundsRecord_to_string(const FundsRecord& record) {
-    return fmt::format("{}", record);
-}
-
 void export_FundsRecord(py::module& m) {
     py::class_<FundsRecord>(m, "FundsRecord", "当前资产情况记录")
       .def(py::init<>())
 
-      .def("__str__", FundsRecord_to_string)
-      .def("__repr__", FundsRecord_to_string)
+      .def("__str__", to_py_str<FundsRecord>)
+      .def("__repr__", to_py_str<FundsRecord>)
 
       .def_readwrite("cash", &FundsRecord::cash, "当前现金")
       .def_readwrite("market_value", &FundsRecord::market_value, "当前多头市值")

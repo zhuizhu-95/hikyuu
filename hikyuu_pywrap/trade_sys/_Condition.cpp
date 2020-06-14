@@ -53,6 +53,9 @@ void export_Condition(py::module& m) {
       .def_property("tm", &ConditionBase::getTM, &ConditionBase::setTM, "关联交易管理账户")
       .def_property("sg", &ConditionBase::getSG, &ConditionBase::setSG, "关联交易信号指示器")
 
+      .def("getTO", &ConditionBase::getTO, "获取交易对象")
+      .def("setTO", &ConditionBase::setTO, "设置交易对象")
+
       .def("getParam", &ConditionBase::getParam<boost::any>, R"(获取指定的参数
     
     :param str name: 参数名称

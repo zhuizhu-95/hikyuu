@@ -28,8 +28,8 @@ void export_StockTypeInfo(py::module& m) {
       .def_property_readonly("tickValue", &StockTypeInfo::tickValue, "每tick价格")
       .def_property_readonly("unit", &StockTypeInfo::unit, "每单位价格 = tickValue / tick")
       .def_property_readonly("precision", &StockTypeInfo::precision, "价格精度")
-      .def_property_readonly("min_trade_number", &StockTypeInfo::minTradeNumber, "每笔最小交易数量")
-      .def_property_readonly("max_trade_number", &StockTypeInfo::maxTradeNumber, "每笔最大交易数量")
+      .def_property_readonly("minTradeNumber", &StockTypeInfo::minTradeNumber, "每笔最小交易数量")
+      .def_property_readonly("maxTradeNumber", &StockTypeInfo::maxTradeNumber, "每笔最大交易数量")
 
         DEF_PICKLE(StockTypeInfo);
 }

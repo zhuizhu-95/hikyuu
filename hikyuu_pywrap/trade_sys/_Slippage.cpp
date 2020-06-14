@@ -38,7 +38,16 @@ public:
 };
 
 void export_Slippage(py::module& m) {
-    py::class_<SlippageBase, SPPtr, PySlippageBase>(m, "SlippageBase")
+    py::class_<SlippageBase, SPPtr, PySlippageBase>(m, "SlippageBase", R"(移滑价差算法基类
+
+    自定义移滑价差接口：
+
+        SlippageBase.getRealBuyPrice() - 【必须】计算实际买入价格
+        SlippageBase.getRealSellPrice() - 【必须】计算实际卖出价格
+        SlippageBase._calculate() - 【必须】子类计算接口
+        SlippageBase._clone() - 【必须】克隆接口
+        SlippageBase._reset() - 【可选】重载私有变量)")
+
       .def(py::init<>())
       .def(py::init<const string&>(), R"(初始化构造函数
         
@@ -51,18 +60,58 @@ void export_Slippage(py::module& m) {
                     py::overload_cast<const string&>(&SlippageBase::name), "名称")
       .def_property("to", &SlippageBase::getTO, &SlippageBase::setTO, "关联交易对象")
 
-      .def("getParam", &SlippageBase::getParam<boost::any>)
-      .def("setParam", &SlippageBase::setParam<boost::any>)
-      .def("haveParam", &SlippageBase::haveParam)
-      .def("getRealBuyPrice", &SlippageBase::getRealBuyPrice)
-      .def("getRealSellPrice", &SlippageBase::getRealSellPrice)
-      .def("reset", &SlippageBase::reset)
-      .def("clone", &SlippageBase::clone)
-      .def("_calculate", &SlippageBase::_calculate)
-      .def("_reset", &SlippageBase::_reset)
+      .def("getTO", &SlippageBase::getTO, "获取交易对象")
+      .def("setTO", &SlippageBase::setTO, "设置交易对象")
+
+      .def("getParam", &SlippageBase::getParam<boost::any>, R"(获取指定的参数
+    
+    :param str name: 参数名称
+    :return: 参数值
+    :raises out_of_range: 无此参数)")
+
+      .def("setParam", &SlippageBase::setParam<boost::any>, R"(设置参数
+        
+    :param str name: 参数名称
+    :param value: 参数值
+    :type value: int | bool | float | string
+    :raises logic_error: Unsupported type! 不支持的参数类型)")
+
+      .def("haveParam", &SlippageBase::haveParam, "参数是否存在")
+
+      .def("getRealBuyPrice", &SlippageBase::getRealBuyPrice,
+           R"(【重载接口】计算实际买入价格
+        
+    :param Datetime datetime: 买入时间
+    :param float price: 计划买入价格
+    :return: 实际买入价格
+    :rtype: float)")
+
+      .def("getRealSellPrice", &SlippageBase::getRealSellPrice,
+           R"(【重载接口】计算实际卖出价格
+        
+    :param Datetime datetime: 卖出时间
+    :param float price: 计划卖出价格
+    :return: 实际卖出价格
+    :rtype: float)")
+
+      .def("reset", &SlippageBase::reset, "复位操作")
+      .def("clone", &SlippageBase::clone, "克隆操作")
+      .def("_calculate", &SlippageBase::_calculate, "【重载接口】子类计算接口")
+      .def("_reset", &SlippageBase::_reset, "【重载接口】子类复位接口，复位内部私有变量")
 
         DEF_PICKLE(SPPtr);
 
-    m.def("SL_FixedPercent", SP_FixedPercent, py::arg("p") = 0.001);
-    m.def("SL_FixedValue", SP_FixedValue, py::arg("value") = 0.01);
+    m.def(
+      "SP_FixedPercent", SP_FixedPercent, py::arg("p") = 0.001,
+      R"(固定百分比移滑价差算法，买入实际价格 = 计划买入价格 * (1 + p)，卖出实际价格 = 计划卖出价格 * (1 - p)
+    
+    :param float p: 偏移的固定百分比
+    :return: 移滑价差算法实例)");
+
+    m.def(
+      "SP_FixedValue", SP_FixedValue, py::arg("value") = 0.01,
+      R"(固定价格移滑价差算法，买入实际价格 = 计划买入价格 + 偏移价格，卖出实际价格 = 计划卖出价格 - 偏移价格
+    
+    :param float p: 偏移价格
+    :return: 移滑价差算法实例)");
 }

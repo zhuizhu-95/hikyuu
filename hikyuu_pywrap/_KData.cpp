@@ -65,15 +65,15 @@ void export_KData(py::module& m) {
       .def("__repr__", &KData::toString)
       .def("__len__", &KData::size)
 
-      .def_property_readonly("start_pos", &KData::startPos,
+      .def_property_readonly("startPos", &KData::startPos,
                              "在原始K线记录中对应的起始位置，如果为空返回0")
 
       .def_property_readonly(
-        "end_pos", &KData::endPos,
+        "endPos", &KData::endPos,
         "在原始K线记录中对应范围的下一条记录的位置，如果为空返回0,其他等于last_pos + 1")
 
       .def_property_readonly(
-        "last_pos", &KData::lastPos,
+        "lastPos", &KData::lastPos,
         "获取在原始K线记录中对应的最后一条记录的位置，如果为空返回0,其他等于end_pos - 1 ")
 
       .def_property_readonly("open", &KData::open, "开盘价指标")
@@ -84,15 +84,16 @@ void export_KData(py::module& m) {
       .def_property_readonly("vol", &KData::vol, "成交量指标")
 
       .def(
-        "get_date_list", [](const KData& k) { return vector_to_python_list(k.getDatetimeList()); },
+        "getDatetimeList",
+        [](const KData& k) { return vector_to_python_list(k.getDatetimeList()); },
         "返回交易日期列表")
 
       .def("get", &KData::getKRecord, "获取指定位置的KRecord，未作越界检查")
 
-      .def("get_by_date", &KData::getKRecordByDate, "按日期查询KRecord")
+      .def("getKRecordByDate", &KData::getKRecordByDate, "按日期查询KRecord")
 
       .def(
-        "get_pos",
+        "getPos",
         [](const KData& k, const Datetime& d) {
             size_t pos = k.getPos(d);
             return (pos == Null<size_t>()) ? py::none() : py::int_(pos);
@@ -104,8 +105,8 @@ void export_KData(py::module& m) {
 
       .def("size", &KData::size)
       .def("empty", &KData::empty)
-      .def("get_query", &KData::getQuery, "获取关联的 Query 对象")
-      .def("get_stock", &KData::getStock, "获取关联的Stock，如果没有关联，返回无效的 Stock")
+      .def("getQuery", &KData::getQuery, "获取关联的 Query 对象")
+      .def("getStock", &KData::getStock, "获取关联的Stock，如果没有关联，返回无效的 Stock")
       .def("tocsv", &KData::tocsv, "输出数据到指定的 csv 文件中")
 
       .def("__getitem__",
@@ -152,7 +153,7 @@ void export_KData(py::module& m) {
     Datetime null_date = Null<Datetime>();
 
     m.def(
-      "get_kdata",
+      "getKData",
       py::overload_cast<const string&, int64, int64, KQuery::KType, KQuery::RecoverType>(getKData),
       py::arg("market_code"), py::arg("start") = 0, py::arg("end") = null_int64,
       py::arg("ktype") = KQuery::DAY, py::arg("recover_type") = KQuery::NO_RECOVER,
@@ -164,7 +165,7 @@ void export_KData(py::module& m) {
     :param Query.KType ktype: K 线类型, 'DAY'|'WEEK'|'MONTH'|'QUARTER'|'HALFYEAR'|'YEAR'|'MIN'|'MIN5'|'MIN15'|'MIN30'|'MIN60'
     :param Query.RecoverType recover_type: 复权类型)");
 
-    m.def("get_kdata",
+    m.def("getKData",
           py::overload_cast<const string&, const Datetime&, const Datetime&, KQuery::KType,
                             KQuery::RecoverType>(getKData),
           py::arg("market_code"), py::arg("start") = Datetime::min(), py::arg("end") = null_date,

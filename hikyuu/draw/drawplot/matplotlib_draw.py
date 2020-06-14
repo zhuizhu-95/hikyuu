@@ -270,7 +270,7 @@ def kplot(kdata, new=True, axes=None, colorup='r', colordown='g', width=0.6, alp
 
     axes.autoscale_view()
     axes.set_xlim(-1, len(kdata) + 1)
-    ax_set_locator_formatter(axes, kdata.get_date_list(), kdata.get_query().ktype)
+    ax_set_locator_formatter(axes, kdata.getDatetimeList(), kdata.getQuery().ktype)
     #draw()
 
 
@@ -321,7 +321,7 @@ def mkplot(kdata, new=True, axes=None, colorup='r', colordown='g', ticksize=3):
 
     axes.autoscale_view()
     #axes.set_xlim(0, len(kdata))
-    ax_set_locator_formatter(axes, kdata.get_date_list(), kdata.get_query().ktype)
+    ax_set_locator_formatter(axes, kdata.getDatetimeList(), kdata.getQuery().ktype)
     #draw()
 
 
@@ -480,7 +480,7 @@ def ax_draw_macd(axes, kdata, n1=12, n2=26, n3=9):
     :param int n3: 指标 MACD 的参数3
     """
     macd = MACD(CLOSE(kdata), n1, n2, n3)
-    bmacd, fmacd, smacd = macd.get_result(0), macd.get_result(1), macd.get_result(2)
+    bmacd, fmacd, smacd = macd.getResult(0), macd.getResult(1), macd.getResult(2)
 
     text = 'MACD(%s,%s,%s) DIF:%.2f, DEA:%.2f, BAR:%.2f' % (n1, n2, n3, fmacd[-1], smacd[-1], bmacd[-1])
     axes.text(0.01, 0.97, text, horizontalalignment='left', verticalalignment='top', transform=axes.transAxes)
@@ -517,7 +517,7 @@ def ax_draw_macd2(axes, ref, kdata, n1=12, n2=26, n3=9):
     :param int n3: 指标 MACD 的参数3
     """
     macd = MACD(CLOSE(kdata), n1, n2, n3)
-    bmacd, fmacd, smacd = macd.get_result(0), macd.get_result(1), macd.get_result(2)
+    bmacd, fmacd, smacd = macd.getResult(0), macd.getResult(1), macd.getResult(2)
 
     text = 'MACD(%s,%s,%s) DIF:%.2f, DEA:%.2f, BAR:%.2f' % (n1, n2, n3, fmacd[-1], smacd[-1], bmacd[-1])
     axes.text(0.01, 0.97, text, horizontalalignment='left', verticalalignment='top', transform=axes.transAxes)

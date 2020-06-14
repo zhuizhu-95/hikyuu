@@ -32,13 +32,14 @@ void export_KQuery(py::module& m) {
       .def("__repr__", KQuery_to_str)
       .def_property_readonly("start", &KQuery::start, "起始索引，当按日期查询方式创建时无效")
       .def_property_readonly("end", &KQuery::end, "结束索引，当按日期查询方式创建时无效")
-      .def_property_readonly("start_date", &KQuery::startDatetime,
+      .def_property_readonly("startDatetime", &KQuery::startDatetime,
                              "起始日期，当按索引查询方式创建时无效")
-      .def_property_readonly("end_date", &KQuery::endDatetime,
+      .def_property_readonly("endDatetime", &KQuery::endDatetime,
                              "结束日期，当按索引查询方式创建时无效")
       //.def_property_readonly("queryType", &KQuery::queryType, "查询方式")
       .def_property_readonly("ktype", &KQuery::kType, "查询的K线类型")
-      .def_property_readonly("recover_type", &KQuery::recoverType, "复权类别")
+      .def_property_readonly("kType", &KQuery::kType, "同 ktype")
+      .def_property_readonly("recoverType", &KQuery::recoverType, "复权类别")
 
         DEF_PICKLE(KQuery);
 

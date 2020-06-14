@@ -59,6 +59,9 @@ void export_Signal(py::module& m) {
                     py::overload_cast<const string&>(&SignalBase::name), "名称")
       .def_property("to", &SignalBase::getTO, &SignalBase::setTO, "关联交易对象")
 
+      .def("getTO", &SignalBase::getTO, "获取交易对象")
+      .def("setTO", &SignalBase::setTO, "设置交易对象")
+
       .def("getParam", &SignalBase::getParam<boost::any>, "获取指定的参数")
       .def("setParam", &SignalBase::setParam<boost::any>, "设置参数值")
       .def("haveParam", &SignalBase::haveParam, "参数是否存在")

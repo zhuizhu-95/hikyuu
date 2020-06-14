@@ -69,15 +69,15 @@ void export_Indicator(py::module& m) {
 
       .def_property_readonly("discard", &Indicator::discard, "需抛弃的数量")
 
-      .def("set_discard", &Indicator::setDiscard, "设置抛弃的个数，如果小于原有的 discard 则无效")
-      .def("get_param", &Indicator::getParam<boost::any>, "获取指标参数")
-      .def("set_param", &Indicator::setParam<boost::any>, "设置指标参数")
-      .def("have_param", &Indicator::haveParam, "判断是否存在指定的参数")
+      .def("setDiscard", &Indicator::setDiscard, "设置抛弃的个数，如果小于原有的 discard 则无效")
+      .def("getParam", &Indicator::getParam<boost::any>, "获取指标参数")
+      .def("setParam", &Indicator::setParam<boost::any>, "设置指标参数")
+      .def("haveParam", &Indicator::haveParam, "判断是否存在指定的参数")
       .def("size", &Indicator::size)
       .def("empty", &Indicator::empty, "是否为空")
       .def("clone", &Indicator::clone, "克隆操作")
       .def("formula", &Indicator::formula, "打印指标公式")
-      .def("get_result_number", &Indicator::getResultNumber, "获取结果集数量")
+      .def("getResultNumber", &Indicator::getResultNumber, "获取结果集数量")
 
       .def("get", &Indicator::get, py::arg("pos"), py::arg("num") = 0,
            R"(获取指定日期数值。如果对应日期无结果，返回 constant.null_price
@@ -86,7 +86,7 @@ void export_Indicator(py::module& m) {
 :param int num: 指定的结果集)")
 
       .def(
-        "get_pos",
+        "getPos",
         [](const Indicator& self, const Datetime& d) {
             size_t pos = self.getPos(d);
             return (pos == Null<size_t>()) ? py::none() : py::int_(pos);
@@ -96,40 +96,40 @@ void export_Indicator(py::module& m) {
 :param datetime: 指定的时间
 :return: 对应的索引位置，如果不在数据范围内，则返回 None)")
 
-      .def("get_date", &Indicator::getDatetime, "获取指定索引位置的日期")
+      .def("getDatetime", &Indicator::getDatetime, "获取指定索引位置的日期")
 
-      .def("get_by_date", &Indicator::getByDate, py::arg("date"), py::arg("num") = 0,
+      .def("getByDate", &Indicator::getByDate, py::arg("date"), py::arg("num") = 0,
            R"(获取指定日期的数据
 
 :param datetime date: 指定日期
 :param int num: 第几个结果集)")
 
-      .def("get_result", &Indicator::getResult, R"(获取指定结果集
+      .def("getResult", &Indicator::getResult, R"(获取指定结果集
 
 :param int num: 指定的结果集
 :rtype: Indicator)")
 
-      .def("get_result_as_price_list", &Indicator::getResultAsPriceList, R"(获取指定结果集
+      .def("getResultAsPriceList", &Indicator::getResultAsPriceList, R"(获取指定结果集
 
 :param int num: 指定的结果集
 :rtype: list)")
 
-      .def("get_date_list", &Indicator::getDatetimeList, "获取日期列表")
+      .def("getDatetimeList", &Indicator::getDatetimeList, "获取日期列表")
 
-      .def("set_context", py::overload_cast<const Stock&, const KQuery&>(&Indicator::setContext),
+      .def("setContext", py::overload_cast<const Stock&, const KQuery&>(&Indicator::setContext),
            R"(设置上下文
 
 :param Stock stock: 指定的 Stock
 :param Query query: 指定的查询条件)")
 
-      .def("set_context", py::overload_cast<const KData&>(&Indicator::setContext),
+      .def("setContext", py::overload_cast<const KData&>(&Indicator::setContext),
            R"(设置上下文
 
 :param KData kdata: 关联的上下文K线)")
 
-      .def("get_context", &Indicator::getContext, "获取上下文")
+      .def("getContext", &Indicator::getContext, "获取上下文")
 
-      .def("get_imp", &Indicator::getImp, "获取内部实现实例")
+      .def("getImp", &Indicator::getImp, "获取内部实现实例")
       .def("__len__", &Indicator::size)
 
       .def("__call__", py::overload_cast<void>(&Indicator::operator()))

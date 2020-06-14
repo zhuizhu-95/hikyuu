@@ -8,14 +8,11 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/operators.h>
 #include <hikyuu/trade_manage/CostRecord.h>
+#include "../pybind_utils.h"
 #include "../pickle_support.h"
 
 using namespace hku;
 namespace py = pybind11;
-
-std::string CostRecord_to_string(const CostRecord& record) {
-    return fmt::format("{}", record);
-}
 
 void export_CostRecord(py::module& m) {
     py::class_<CostRecord>(m, "CostRecord", R"(成本记录
@@ -29,8 +26,8 @@ void export_CostRecord(py::module& m) {
       .def(py::init<price_t, price_t, price_t, price_t, price_t>(), py::arg("commission"),
            py::arg("stamptax"), py::arg("transferfee"), py::arg("others"), py::arg("total"))
 
-      .def("__str__", &CostRecord::toString)
-      .def("__repr__", &CostRecord::toString)
+      .def("__str__", to_py_str<CostRecord>)
+      .def("__repr__", to_py_str<CostRecord>)
 
       .def_readwrite("commission", &CostRecord::commission, "佣金")
       .def_readwrite("stamptax", &CostRecord::stamptax, "印花税")

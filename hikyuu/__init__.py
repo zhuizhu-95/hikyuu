@@ -115,10 +115,10 @@ for s in blocksz:
         blockzxb.add(s)
 zsbk_zxb = blockzxb
 
-zsbk_sz50 = sm.get_block("指数板块", "上证50")
-zsbk_sz180 = sm.get_block("指数板块", "上证180")
-zsbk_hs300 = sm.get_block("指数板块", "沪深300")
-zsbk_zz100 = sm.get_block("指数板块", "沪深300")
+zsbk_sz50 = sm.getBlock("指数板块", "上证50")
+zsbk_sz180 = sm.getBlock("指数板块", "上证180")
+zsbk_hs300 = sm.getBlock("指数板块", "沪深300")
+zsbk_zz100 = sm.getBlock("指数板块", "沪深300")
 
 # ------------------------------------------------------------------
 # 设置关键类型简称
@@ -142,13 +142,13 @@ def set_global_context(stk, query):
         :param Query query: 指定的查询条件
     """
     global K, O, C, H, L, A, V
-    K = stk.get_kdata(query)
-    O.set_context(K)
-    C.set_context(K)
-    H.set_context(K)
-    L.set_context(K)
-    A.set_context(K)
-    V.set_context(K)
+    K = stk.getKData(query)
+    O.setContext(K)
+    C.setContext(K)
+    H.setContext(K)
+    L.setContext(K)
+    A.setContext(K)
+    V.setContext(K)
 
 
 def get_global_context():
@@ -156,7 +156,7 @@ def get_global_context():
 
         :rtype: KData
     """
-    return C.set_context()
+    return C.setContext()
 
 
 set_global_context(sm['sh000001'], Query(-150))

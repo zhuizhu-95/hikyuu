@@ -42,14 +42,14 @@ try:
 
     def indicator_to_df(indicator):
         """转化为pandas.DataFrame"""
-        if indicator.get_result_number() == 1:
+        if indicator.getResultNumber() == 1:
             return pd.DataFrame(indicator_to_np(indicator), columns=[indicator.name])
 
         data = {}
         name = indicator.name
         columns = []
-        for i in range(indicator.get_result_number()):
-            data[name + str(i)] = indicator.get_result(i)
+        for i in range(indicator.getResultNumber()):
+            data[name + str(i)] = indicator.getResult(i)
             columns.append(name + str(i + 1))
         return pd.DataFrame(data, columns=columns)
 
@@ -59,14 +59,14 @@ try:
     def tawrap_init(self, tafunc, name, params, result_num=1, prices=None):
         super(self.__class__, self).__init__(name, result_num)
         for k, v in params.items():
-            self.set_param(k, v)
+            self.setParam(k, v)
         self._tafunc = tafunc
         self._prices = prices
         self._params = params
         self._result_num = result_num
 
     def tawrap_calculate(self, ind):
-        result_num = self.get_result_number()
+        result_num = self.getResultNumber()
 
         if result_num < 1:
             print("error: result_num must be >= 1!")
@@ -74,15 +74,15 @@ try:
 
         if not self._prices:
             if self.name == "TA_OBV":
-                if ind.get_result_number() < 2:
+                if ind.getResultNumber() < 2:
                     print("error: result_num must be >= 2!")
                     return
-                inputs = {'close': ind.get_result(0).to_np(), 'volume': ind.get_result(1).to_np()}
+                inputs = {'close': ind.getResult(0).to_np(), 'volume': ind.getResult(1).to_np()}
             elif self.name in ("TA_BETA", "TA_CORREL"):
-                if ind.get_result_number() < 2:
+                if ind.getResultNumber() < 2:
                     print("error: result_num must be >= 2!")
                     return
-                inputs = {'high': ind.get_result(0).to_np(), 'low': ind.get_result(1).to_np()}
+                inputs = {'high': ind.getResult(0).to_np(), 'low': ind.getResult(1).to_np()}
             else:
                 inputs = {'close': ind.to_np()}
         else:
@@ -91,19 +91,19 @@ try:
                 return
 
             inputs = {
-                'open': ind.get_result(0).to_np(),
-                'high': ind.get_result(1).to_np(),
-                'low': ind.get_result(2).to_np(),
-                'close': ind.get_result(3).to_np(),
-                'volume': ind.get_result(5).to_np()
+                'open': ind.getResult(0).to_np(),
+                'high': ind.getResult(1).to_np(),
+                'low': ind.getResult(2).to_np(),
+                'close': ind.getResult(3).to_np(),
+                'volume': ind.getResult(5).to_np()
             }
 
-        params = self.get_parameter()
+        params = self.getParameter()
         param_names = params.get_name_list()
         func_params = {}
         for name in param_names:
             if name != "kdata":
-                func_params[name] = self.get_param(name)
+                func_params[name] = self.getParam(name)
 
         self._tafunc.set_parameters(func_params)
 
@@ -112,14 +112,14 @@ try:
             for i, val in enumerate(outputs):
                 if not np.isnan(val):
                     self._set(float(val), i)
-            self.set_discard(self._tafunc.lookback)
+            self.setDiscard(self._tafunc.lookback)
 
         else:
             for i, out in enumerate(outputs):
                 for j, val in enumerate(out):
                     if not np.isnan(val):
                         self._set(float(val), j, i)
-            self.set_discard(self._tafunc.lookback)
+            self.setDiscard(self._tafunc.lookback)
 
     def check_all_true(self):
         return True

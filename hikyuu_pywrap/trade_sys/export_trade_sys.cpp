@@ -20,6 +20,7 @@ void export_Selector(py::module& m);
 void export_Signal(py::module& m);
 void export_Slippage(py::module& m);
 void export_Stoploss(py::module& m);
+void export_TradeRequest(py::module& m);
 void export_System(py::module& m);
 
 void export_trade_sys(py::module& m) {
@@ -33,6 +34,7 @@ void export_trade_sys(py::module& m) {
     export_Signal(m);
     export_Slippage(m);
     export_Stoploss(m);
+    export_TradeRequest(m);
     export_System(m);
     export_Portfolio(m);
 }

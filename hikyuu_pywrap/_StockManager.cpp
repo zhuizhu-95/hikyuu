@@ -28,29 +28,29 @@ void export_StockManager(py::module& m) {
       .def("getHikyuuParameter", &StockManager::getHikyuuParameter)
 
       .def(
-        "get_all_market",
+        "getAllMarket",
         [](const StockManager& sm) { return vector_to_python_list<string>(sm.getAllMarket()); },
         "获取市场简称列表")
 
-      .def("get_market_info", &StockManager::getMarketInfo, "获取相应的市场信息")
+      .def("getMarketInfo", &StockManager::getMarketInfo, "获取相应的市场信息")
 
       .def(
-        "get_stock_type_info",
+        "getStockTypeInfo",
         [](const StockManager& sm, StockType& tp) { return sm.getStockTypeInfo(tp); },
         "获取证券类型详细信息")
 
       .def("size", &StockManager::size, "证券数量")
-      .def("get_stock", &StockManager::getStock,
+      .def("getStock", &StockManager::getStock,
            "Return the stock object of the specified code, like 'sh000001'")
 
-      .def("get_block", &StockManager::getBlock, R"(获取预定义的板块
+      .def("getBlock", &StockManager::getBlock, R"(获取预定义的板块
 
 :param str category: 板块分类
 :param str name: 板块名称
 :return: 板块，如找不到返回一个空 Block )")
 
       .def(
-        "get_block_list",
+        "getBlockList",
         [](StockManager& sm, const string& category) {
             return vector_to_python_list<Block>(sm.getBlockList(category));
         },
@@ -59,11 +59,11 @@ void export_StockManager(py::module& m) {
 :param str category: 板块分类)")
 
       .def(
-        "get_block_list",
+        "getBlockList",
         [](StockManager& sm) { return vector_to_python_list<Block>(sm.getBlockList()); },
         "获取全部的板块列表")
 
-      .def("get_trading_calendar", &StockManager::getTradingCalendar, py::arg("query"),
+      .def("getTradingCalendar", &StockManager::getTradingCalendar, py::arg("query"),
            py::arg("market") = "SH", R"(获取指定市场的交易日日历
 
 :param Query query: Query查询条件
@@ -71,9 +71,9 @@ void export_StockManager(py::module& m) {
 :return: 日期列表)")
 
       .def(
-        "add_temp_csv_ctock", &StockManager::addTempCsvStock, py::arg("code"),
-        py::arg("day_filename"), py::arg("min_filename"), py::arg("tick") = 0.01,
-        py::arg("tick_value") = 0.01, py::arg("precision") = 2, py::arg("min_tradeNumber") = 1,
+        "addTempCsvStock", &StockManager::addTempCsvStock, py::arg("code"), py::arg("day_filename"),
+        py::arg("min_filename"), py::arg("tick") = 0.01, py::arg("tick_value") = 0.01,
+        py::arg("precision") = 2, py::arg("min_tradeNumber") = 1,
         py::arg("max_tradeNumber") = 1000000,
         R"(从CSV文件（K线数据）增加临时的Stock，可用于只有CSV格式的K线数据时，进行临时测试。        
 
@@ -90,7 +90,7 @@ CSV文件第一行为标题，需含有 Datetime（或Date、日期）、OPEN（
 :return: 加入的Stock)",
         py::keep_alive<1, 2>())
 
-      .def("remove_temp_csv_Stock", &StockManager::removeTempCsvStock,
+      .def("removeTempCsvStock", &StockManager::removeTempCsvStock,
            R"(移除增加的临时Stock
 
 :param str code: 创建时自定义的编码)")

@@ -41,5 +41,13 @@ void export_KRecord(py::module& m) {
       .def_readwrite("amo", &KRecord::transAmount, "成交金额")
       .def_readwrite("vol", &KRecord::transCount, "成交数量")
 
+      .def_readwrite("datetime", &KRecord::datetime, "时间")
+      .def_readwrite("openPrice", &KRecord::openPrice, "开盘价")
+      .def_readwrite("highPrice", &KRecord::highPrice, "最高价")
+      .def_readwrite("lowPrice", &KRecord::lowPrice, "最低价")
+      .def_readwrite("closePrice", &KRecord::closePrice, "收盘价")
+      .def_readwrite("transAmount", &KRecord::transAmount, "成交金额")
+      .def_readwrite("transCount", &KRecord::transCount, "成交数量")
+
         DEF_PICKLE(KRecord);
 }

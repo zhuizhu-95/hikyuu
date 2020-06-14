@@ -10,14 +10,11 @@
 #include <hikyuu/trade_manage/TradeCostBase.h>
 #include "../convert_Datetime.h"
 #include "../_Parameter.h"
+#include "../pybind_utils.h"
 #include "../pickle_support.h"
 
 using namespace hku;
 namespace py = pybind11;
-
-string TradeCostBase_to_string(const TradeCostPtr& cost) {
-    return fmt::format("{}", cost);
-}
 
 class PyTradeCostBase : public TradeCostBase {
     PY_CLONE(PyTradeCostBase, TradeCostBase)
@@ -73,10 +70,10 @@ void export_TradeCost(py::module& m) {
 
       .def_property_readonly("name", &TradeCostBase::name, "交易算法名称")
 
-      .def("__str__", TradeCostBase_to_string)
-      .def("__repr__", TradeCostBase_to_string)
+      .def("__str__", to_py_str<TradeCostBase>)
+      .def("__repr__", to_py_str<TradeCostBase>)
 
-      .def("get_param", &TradeCostBase::getParam<boost::any>, R"(get_param(self, name)
+      .def("getParam", &TradeCostBase::getParam<boost::any>, R"(getParam(self, name)
 
     获取指定的参数
     
@@ -84,7 +81,7 @@ void export_TradeCost(py::module& m) {
     :return: 参数值
     :raises out_of_range: 无此参数)")
 
-      .def("set_param", &TradeCostBase::setParam<boost::any>, R"(setParam(self, name, value)
+      .def("setParam", &TradeCostBase::setParam<boost::any>, R"(setParam(self, name, value)
     
     设置参数
         
@@ -95,10 +92,8 @@ void export_TradeCost(py::module& m) {
 
       .def("clone", &TradeCostBase::clone, "克隆操作")
 
-      .def("get_buy_cost", &TradeCostBase::getBuyCost, py::arg("date"), py::arg("stock"),
-           py::arg("price"), py::arg("num"), R"(get_buy_cost(self, date, stock, price, num)
-    
-    【重载接口】获取买入成本
+      .def("getBuyCost", &TradeCostBase::getBuyCost, py::arg("date"), py::arg("stock"),
+           py::arg("price"), py::arg("num"), R"(【重载接口】获取买入成本
         
     :param datetime date: 买入时刻
     :param Stock stock: 买入对象
@@ -107,11 +102,9 @@ void export_TradeCost(py::module& m) {
     :return: 交易成本记录
     :rtype: CostRecord)")
 
-      .def("get_sell_cost", &TradeCostBase::getSellCost, py::arg("date"), py::arg("stock"),
+      .def("getSellCost", &TradeCostBase::getSellCost, py::arg("date"), py::arg("stock"),
            py::arg("price"), py::arg("num"),
-           R"(get_sell_cost(self, date, stock, price, num)
-    
-    【重载接口】获取卖出成本
+           R"(【重载接口】获取卖出成本
         
     :param datetime date: 卖出时刻
     :param Stock stock: 卖出对象
@@ -120,10 +113,10 @@ void export_TradeCost(py::module& m) {
     :return: 交易成本记录
     :rtype: CostRecord)")
 
-      .def("get_borrow_cash_cost", &TradeCostBase::getBorrowCashCost, "暂未实现")
-      .def("get_return_cash_cost", &TradeCostBase::getReturnCashCost, "暂未实现")
-      .def("get_borrow_stock_cost", &TradeCostBase::getBorrowStockCost, "暂未实现")
-      .def("get_return_stock_cost", &TradeCostBase::getReturnStockCost, "暂未实现")
+      //.def("getBorrowCashCost", &TradeCostBase::getBorrowCashCost, "暂未实现")
+      //.def("getReturnCashCost", &TradeCostBase::getReturnCashCost, "暂未实现")
+      //.def("getBorrowStockCost", &TradeCostBase::getBorrowStockCost, "暂未实现")
+      //.def("getReturnStockCost", &TradeCostBase::getReturnStockCost, "暂未实现")
 
-        DEF_PICKLE(TradeCostPtr);
+      DEF_PICKLE(TradeCostPtr);
 }

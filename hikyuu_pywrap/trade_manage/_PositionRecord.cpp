@@ -28,17 +28,17 @@ void export_PositionRecord(py::module& m) {
       .def("__repr__", &PositionRecord::toString)
 
       .def_readwrite("stock", &PositionRecord::stock, "交易对象")
-      .def_readwrite("take_date", &PositionRecord::takeDatetime, "初次建仓日期")
-      .def_readwrite("clean_date", &PositionRecord::cleanDatetime, "平仓日期")
+      .def_readwrite("takeDatetime", &PositionRecord::takeDatetime, "初次建仓日期")
+      .def_readwrite("cleanDatetime", &PositionRecord::cleanDatetime, "平仓日期")
       .def_readwrite("number", &PositionRecord::number, "当前持仓数量")
       .def_readwrite("stoploss", &PositionRecord::stoploss, "当前止损价")
-      .def_readwrite("goal_price", &PositionRecord::goalPrice, "当前的目标价格")
-      .def_readwrite("total_number", &PositionRecord::totalNumber, "累计持仓数量")
-      .def_readwrite("buy_money", &PositionRecord::buyMoney, "累计买入资金")
-      .def_readwrite("total_cost", &PositionRecord::totalCost, "累计交易总成本")
-      .def_readwrite("total_risk", &PositionRecord::totalRisk,
+      .def_readwrite("goalPrice", &PositionRecord::goalPrice, "当前的目标价格")
+      .def_readwrite("totalNumber", &PositionRecord::totalNumber, "累计持仓数量")
+      .def_readwrite("buyMoney", &PositionRecord::buyMoney, "累计买入资金")
+      .def_readwrite("totalCost", &PositionRecord::totalCost, "累计交易总成本")
+      .def_readwrite("totalRisk", &PositionRecord::totalRisk,
                      "累计交易风险 = 各次 （买入价格-止损)*买入数量, 不包含交易成本")
-      .def_readwrite("sell_money", &PositionRecord::sellMoney, "累计卖出资金")
+      .def_readwrite("sellMoney", &PositionRecord::sellMoney, "累计卖出资金")
 
         DEF_PICKLE(PositionRecord);
 }
