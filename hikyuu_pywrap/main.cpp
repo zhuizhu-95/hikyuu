@@ -41,6 +41,8 @@ void export_SystemPart(py::module& m);
 void export_trade_manage(py::module& m);
 void export_trade_sys(py::module& m);
 
+void export_data_driver(py::module& m);
+
 PYBIND11_MODULE(core, m) {
     m.def(
       "get_date_range",
@@ -84,4 +86,6 @@ PYBIND11_MODULE(core, m) {
     export_SystemPart(m);  // 必须在 export_trade_manage 之前
     export_trade_manage(m);
     export_trade_sys(m);
+
+    export_data_driver(m);
 }
