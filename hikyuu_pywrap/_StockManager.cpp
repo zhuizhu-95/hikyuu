@@ -7,6 +7,7 @@
 
 #include <pybind11/pybind11.h>
 #include <hikyuu/StockManager.h>
+#include "_Parameter.h"
 #include "pybind_utils.h"
 #include "StockType.h"
 

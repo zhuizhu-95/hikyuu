@@ -75,6 +75,7 @@ void export_KQuery(py::module& m) {
     kquery.attr("MONTH") = "MONTH";
     kquery.attr("QUARTER") = "QUARTER";
     kquery.attr("HALFYEAR") = "HALFYEAR";
+    kquery.attr("YEAR") = "YEAR";
     kquery.attr("MIN") = "MIN";
     kquery.attr("MIN5") = "MIN5";
     kquery.attr("MIN15") = "MIN15";

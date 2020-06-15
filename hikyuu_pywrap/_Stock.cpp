@@ -6,8 +6,10 @@
  */
 
 #include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
 #include <hikyuu/KData.h>
 #include <hikyuu/Stock.h>
+#include <hikyuu/data_driver/KDataDriver.h>
 #include <hikyuu/serialization/Stock_serialization.h>
 #include "_Parameter.h"
 #include "convert_Datetime.h"
@@ -54,7 +56,8 @@ void export_Stock(py::module& m) {
       .def(
         "getTimeLineList",
         [](const Stock& stk, const KQuery& query) {
-            return vector_to_python_list(stk.getTimeLineList(query));
+            // return vector_to_python_list(stk.getTimeLineList(query));
+            return stk.getTimeLineList(query);
         },
         R"(获取分时线
         
@@ -174,6 +177,8 @@ void export_Stock(py::module& m) {
 
       .def("__eq__", &Stock::operator==)
       .def("__ne__", &Stock::operator!=)
+
+      .def("getKDataDriver", &Stock::getKDataDriver)
 
         DEF_PICKLE(Stock);
 

@@ -49,7 +49,7 @@ SOFTWARE.
 """
 
 import os
-from datetime import *
+from datetime import date, datetime, timedelta
 from .cpp.core import *
 from .pyindicator import *
 from .talib_wrap import *
