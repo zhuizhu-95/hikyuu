@@ -9,8 +9,8 @@
 #include <hikyuu/indicator/Indicator.h>
 #include <pybind11/pybind11.h>
 #include <pybind11/operators.h>
-#include "../_Parameter.h"
 #include "../convert_Datetime.h"
+#include "../convert_any.h"
 #include "../pickle_support.h"
 
 using namespace hku;

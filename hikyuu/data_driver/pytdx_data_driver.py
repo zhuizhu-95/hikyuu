@@ -103,7 +103,6 @@ class PytdxKDataDriver(KDataDriver):
         :param str code: 证券代码
         :param KQuery.KType ktype: K线类型        
         """
-        print("getCount")
         data = self._get_bars(market, code, ktype)
         return len(data) if data else 0
 

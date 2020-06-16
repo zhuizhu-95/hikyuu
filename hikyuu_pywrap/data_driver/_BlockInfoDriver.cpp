@@ -8,7 +8,7 @@
 #include <hikyuu/indicator/build_in.h>
 #include <pybind11/pybind11.h>
 #include <hikyuu/data_driver/BlockInfoDriver.h>
-#include "../_Parameter.h"
+#include "../convert_any.h"
 #include "../pybind_utils.h"
 
 using namespace hku;

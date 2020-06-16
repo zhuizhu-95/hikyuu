@@ -11,7 +11,7 @@
 #include <hikyuu/Stock.h>
 #include <hikyuu/data_driver/KDataDriver.h>
 #include <hikyuu/serialization/Stock_serialization.h>
-#include "_Parameter.h"
+#include "convert_any.h"
 #include "convert_Datetime.h"
 #include "pickle_support.h"
 #include "StockType.h"

@@ -7,7 +7,7 @@
 
 #include <hikyuu/indicator/Indicator.h>
 #include <pybind11/pybind11.h>
-#include "../_Parameter.h"
+#include "../convert_any.h"
 #include "../pybind_utils.h"
 #include "../pickle_support.h"
 
