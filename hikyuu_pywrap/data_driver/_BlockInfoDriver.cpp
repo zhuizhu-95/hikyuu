@@ -5,52 +5,35 @@
  *      Author: fasiondog
  */
 
-#include <hikyuu/indicator/build_in.h>
-#include <pybind11/pybind11.h>
-#include <hikyuu/data_driver/BlockInfoDriver.h>
-#include "../convert_any.h"
-#include "../pybind_utils.h"
-
-using namespace hku;
-namespace py = pybind11;
-
-class PyBlockInfoDriver : public BlockInfoDriver {
-public:
-    using BlockInfoDriver::BlockInfoDriver;
-
-    bool _init() override {
-        PYBIND11_OVERLOAD_PURE(bool, BlockInfoDriver, _init, );
-    }
-
-    Block getBlock(const string& category, const string& name) override {
-        PYBIND11_OVERLOAD_PURE(Block, BlockInfoDriver, getBlock, category, name);
-    }
-
-    BlockList getBlockList(const string& category) {
-        auto self = py::cast(this);
-        auto py_list = self.attr("_getBlockList")(category);
-        return python_list_to_vector<Block>(py_list);
-    }
-
-    BlockList getBlockList() {
-        auto self = py::cast(this);
-        auto py_list = self.attr("_getBlockList")();
-        return python_list_to_vector<Block>(py_list);
-    }
-};
+#include "_BlockInfoDriver.h"
 
 void export_BlockInfoDriver(py::module& m) {
-    py::class_<BlockInfoDriver, BlockInfoDriverPtr, PyBlockInfoDriver>(m, "BlockInfoDriver")
-      .def(py::init<const string&>())
+    py::class_<BlockInfoDriver, BlockInfoDriverPtr, PyBlockInfoDriver>(m, "BlockInfoDriver",
+                                                                       R"(板块数据驱动基类
+    
+    子类接口：
+        - _init(self) (必须)
+        _ getBlock(self, category, name) （必须）
+        _ _getBlockList(self, category=None) （必须）
+    )")
+      .def(py::init<const string&>(), R"(初始化
 
-      .def_property_readonly("name", &BlockInfoDriver::name)
+    :param str name: 驱动名称)")
+
+      .def_property_readonly("name", &BlockInfoDriver::name, py::return_value_policy::copy,
+                             "驱动名称")
 
       .def("__str__", to_py_str<BlockInfoDriver>)
       .def("__repr__", to_py_str<BlockInfoDriver>)
 
-      .def("getParam", &BlockInfoDriver::getParam<boost::any>)
+      .def("getParam", &BlockInfoDriver::getParam<boost::any>, "获取指定参数")
+      .def("setParam", &BlockInfoDriver::setParam<boost::any>, "设置指定参数")
+      .def("haveParam", &BlockInfoDriver::haveParam, "指定参数是否存在")
 
-      .def("init", &BlockInfoDriver::init)
-      .def("_init", &BlockInfoDriver::_init)
-      .def("getBlock", &BlockInfoDriver::getBlock);
+      .def("_init", &BlockInfoDriver::_init, "【子类接口（必须）】驱动初始化")
+      .def("getBlock", &BlockInfoDriver::getBlock,
+           R"(【子类接口（必须）】获取指定板块
+
+    :param str category: 指定的板块分类
+    :param str name: 板块名称)");
 }
