@@ -53,22 +53,13 @@ void export_Stock(py::module& m) {
 
       .def("getKData", &Stock::getKData, "根据查询条件获取K线数据")
 
-      .def(
-        "getTimeLineList",
-        [](const Stock& stk, const KQuery& query) {
-            // return vector_to_python_list(stk.getTimeLineList(query));
-            return stk.getTimeLineList(query);
-        },
-        R"(获取分时线
+      .def("getTimeLineList", &Stock::getTimeLineList,
+           R"(获取分时线
         
 :param Query query: 查询条件（查询条件中的K线类型、复权类型参数此时无用）)")
 
-      .def(
-        "getTransList",
-        [](const Stock& stk, const KQuery& q) {
-            return vector_to_python_list(stk.getTransList(q));
-        },
-        R"(获取历史分笔数据
+      .def("getTransList", &Stock::getTransList,
+           R"(获取历史分笔数据
 
 :param Query query: 查询条件（查询条件中的K线类型、复权类型参数此时无用）)")
 
@@ -100,46 +91,32 @@ void export_Stock(py::module& m) {
 :param datetime date: 指定日期时刻
 :param Query.KType ktype: K线数据类别)")
 
-      .def(
-        "getKRecordList",
-        [](const Stock& stk, size_t start, size_t end, KQuery::KType ktype) {
-            return vector_to_python_list(stk.getKRecordList(start, end, ktype));
-        },
-        R"(获取K线记录 [start, end)，一般不直接使用，用getKData替代
+      .def("getKRecordList", &Stock::getKRecordList,
+           R"(获取K线记录 [start, end)，一般不直接使用，用getKData替代
 
 :param int start: 起始位置
 :param int end: 结束位置
 :param Query.KType ktype: K线类别
 :return: K线记录列表)")
 
-      .def(
-        "getDatetimeList",
-        [](const Stock& stk, size_t start, size_t end, KQuery::KType ktype) {
-            return vector_to_python_list<Datetime>(stk.getDatetimeList(start, end, ktype));
-        },
-        R"(获取日期时间列表 [start, end)
+      .def("getDatetimeList",
+           py::overload_cast<size_t, size_t, KQuery::KType>(&Stock::getDatetimeList, py::const_),
+           py::arg("start"), py::arg("end"), py::arg("ktype"),
+           R"(获取日期时间列表 [start, end)
 
 :param int start: 起始位置
 :param ind end: 结束位置
 :param Query.KType ktype: K线类型)")
 
-      .def(
-        "getDatetimeList",
-        [](const Stock& stk, const KQuery& q) {
-            return vector_to_python_list<Datetime>(stk.getDatetimeList(q));
-        },
-        R"(获取日期时间列表
+      .def("getDatetimeList", py::overload_cast<const KQuery&>(&Stock::getDatetimeList, py::const_),
+           R"(获取日期时间列表
 
 :param Query query: 查询条件)")
 
       .def("getFinanceInfo", &Stock::getFinanceInfo, "获取当前财务信息")
 
-      .def(
-        "getHistoryFinanceInfo",
-        [](const Stock& stock, const Datetime& date) {
-            return vector_to_python_list(stock.getHistoryFinanceInfo(date));
-        },
-        R"(获取历史财务信息, 字段含义参见：https://hikyuu.org/finance_fields.html
+      .def("getHistoryFinanceInfo", &Stock::getHistoryFinanceInfo,
+           R"(获取历史财务信息, 字段含义参见：https://hikyuu.org/finance_fields.html
         
     :param Datetime date: 指定日期必须是0331、0630、0930、1231，如 Datetime(201109300000))")
 
@@ -148,15 +125,11 @@ void export_Stock(py::module& m) {
 
 :param KRecord krecord: 新增的实时K线记录)")
 
-      .def(
-        "getWeight", [](const Stock& stk) { return vector_to_python_list(stk.getWeight()); },
-        "获取全部权息信息")
+      .def("getWeight", py::overload_cast<void>(&Stock::getWeight, py::const_), "获取全部权息信息")
 
       .def(
         "getWeight",
-        [](const Stock& stk, const Datetime& start, const Datetime& end) {
-            return vector_to_python_list(stk.getWeight(start, end));
-        },
+        py::overload_cast<const Datetime&, const Datetime&>(&Stock::getWeight, py::const_),
         py::arg("start"), py::arg("end") = py::none(),
         R"(获取指定时间段[start,end)内的权息信息。未指定起始、结束时刻时，获取全部权息记录。
 

@@ -31,7 +31,7 @@ void export_BlockInfoDriver(py::module& m) {
       .def("haveParam", &BlockInfoDriver::haveParam, "指定参数是否存在")
 
       .def("_init", &BlockInfoDriver::_init, "【子类接口（必须）】驱动初始化")
-      .def("getBlock", &BlockInfoDriver::getBlock,
+      .def("getBlock", &BlockInfoDriver::getBlock, py::arg("category"), py::arg("name"),
            R"(【子类接口（必须）】获取指定板块
 
     :param str category: 指定的板块分类

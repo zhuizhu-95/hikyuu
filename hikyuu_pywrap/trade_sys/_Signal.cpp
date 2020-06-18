@@ -6,6 +6,7 @@
  */
 
 #include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
 #include <hikyuu/trade_sys/signal/build_in.h>
 #include "../convert_any.h"
 #include "../pybind_utils.h"
@@ -76,15 +77,9 @@ void export_Signal(py::module& m) {
     :param Datetime datetime: 指定时刻
     :rtype: bool)")
 
-      .def(
-        "getBuySignal",
-        [](const SignalBase& sg) { return vector_to_python_list(sg.getBuySignal()); },
-        R"(获取所有买入指示日期列表)")
+      .def("getBuySignal", &SignalBase::getBuySignal, R"(获取所有买入指示日期列表)")
 
-      .def(
-        "getSellSignal",
-        [](const SignalBase& sg) { return vector_to_python_list(sg.getSellSignal()); },
-        R"(获取所有卖出指示日期列表)")
+      .def("getSellSignal", &SignalBase::getSellSignal, R"(获取所有卖出指示日期列表)")
 
       .def("_addBuySignal", &SignalBase::_addBuySignal,
            R"(加入买入信号，在_calculate中调用

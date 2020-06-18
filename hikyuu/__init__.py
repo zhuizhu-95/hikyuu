@@ -49,6 +49,8 @@ SOFTWARE.
 """
 
 import os
+import configparser
+
 from datetime import date, datetime, timedelta
 from .cpp.core import *
 from .pyindicator import *
@@ -73,13 +75,57 @@ KData.__iter__ = KData_iter
 Indicator.__iter__ = indicator_iter
 
 # ------------------------------------------------------------------
-# 数据初始化
+# 读取配置信息，并初始化
 # ------------------------------------------------------------------
-#config_file = os.path.expanduser('~') + "/.hikyuu/hikyuu.ini"
-config_file = "./test_data/hikyuu_win.ini"
-hikyuu_init(config_file)
+#config_file = "./test_data/hikyuu_win.ini"
+#hikyuu_init(config_file)
+#sm = StockManager.instance()
+config_file = os.path.expanduser('~') + "/.hikyuu/hikyuu.ini"
+if not os.path.exists(config_file):
+    # 检查老版本配置是否存在，如果存在可继续使用，否则异常终止
+    data_config_file = os.path.expanduser('~') + "/.hikyuu/data_dir.ini"
+    data_config = configparser.ConfigParser()
+    data_config.read(data_config_file)
+    data_dir = data_config['data_dir']['data_dir']
+    if sys.platform == 'win32':
+        config_file = data_dir + "\\hikyuu_win.ini"
+    else:
+        config_file = data_dir + "/hikyuu_linux.ini"
+    if not os.path.exists(config_file):
+        raise ("未找到配置文件，请先使用数据导入工具导入数据（将自动生成配置文件）！！!")
 
+ini = configparser.ConfigParser()
+ini.read(config_file)
+hku_param = Parameter()
+hku_param.set("tmpdir", ini.get('hikyuu', 'tmpdir'))
+if ini.has_option('hikyuu', 'logger'):
+    hku_param.set("logger", ini['hikyuu']['logger'])
+
+base_param = Parameter()
+base_info_config = ini.options('baseinfo')
+for p in base_info_config:
+    base_param.set(p, ini.get('baseinfo', p))
+
+block_param = Parameter()
+block_config = ini.options('block')
+for p in block_config:
+    block_param.set(p, ini.get('block', p))
+
+preload_param = Parameter()
+preload_config = ini.options('preload')
+for p in preload_config:
+    # 注意：proload参数是布尔类型
+    preload_param.set(p, ini.getboolean('preload', p))
+
+kdata_param = Parameter()
+kdata_config = ini.options('kdata')
+for p in kdata_config:
+    kdata_param.set(p, ini.get('kdata', p))
+
+set_log_level(LOG_LEVEL.TRACE)
 sm = StockManager.instance()
+sm.init(base_param, block_param, kdata_param, preload_param, hku_param)
+set_log_level(LOG_LEVEL.WARN)
 
 # ------------------------------------------------------------------
 # 引入blocka、blocksh、blocksz、blockg全局变量，便于交互式环境下使用

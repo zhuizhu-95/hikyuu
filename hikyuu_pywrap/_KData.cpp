@@ -6,6 +6,7 @@
  */
 
 #include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
 #include "convert_Datetime.h"
 #include "pickle_support.h"
 #include <hikyuu/serialization/KData_serialization.h>
@@ -83,10 +84,7 @@ void export_KData(py::module& m) {
       .def_property_readonly("amo", &KData::amo, "成交金额指标")
       .def_property_readonly("vol", &KData::vol, "成交量指标")
 
-      .def(
-        "getDatetimeList",
-        [](const KData& k) { return vector_to_python_list(k.getDatetimeList()); },
-        "返回交易日期列表")
+      .def("getDatetimeList", &KData::getDatetimeList, "返回交易日期列表")
 
       .def("get", &KData::getKRecord, "获取指定位置的KRecord，未作越界检查")
 
@@ -144,7 +142,7 @@ void export_KData(py::module& m) {
                    start += step;
                }
 
-               return vector_to_python_list(result);
+               return result;
            })
 
         DEF_PICKLE(KData);

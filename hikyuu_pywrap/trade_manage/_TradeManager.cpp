@@ -6,6 +6,7 @@
  */
 
 #include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
 #include <hikyuu/trade_manage/TradeManager.h>
 #include "../convert_Datetime.h"
 #include "../pybind_utils.h"
@@ -111,27 +112,20 @@ void export_TradeManager(py::module& m) {
     :rtype: int)")
       //.def("getShortHoldNumber", &TradeManager::getShortHoldNumber)
 
-      .def(
-        "getTradeList",
-        [](const TradeManager& tm, const Datetime& start, const Datetime& end) {
-            return vector_to_python_list(tm.getTradeList(start, end));
-        },
-        py::arg("start") = Datetime::min(), py::arg("end") = Datetime(),
-        R"(获取交易记录，未指定参数时，获取全部交易记录
+      .def("getTradeList",
+           py::overload_cast<const Datetime&, const Datetime&>(&TradeManager::getTradeList,
+                                                               py::const_),
+           py::arg("start") = Datetime::min(), py::arg("end") = py::none(),
+           R"(获取交易记录，未指定参数时，获取全部交易记录
         
     :param datetime start: 起始日期
     :param datetime end: 结束日期
     :rtype: list)")
 
-      .def(
-        "getPositionList",
-        [](const TradeManager& tm) { return vector_to_python_list(tm.getPositionList()); },
-        "获取当前全部持仓记录")
+      .def("getPositionList", &TradeManager::getPositionList, "获取当前全部持仓记录")
 
-      .def(
-        "getHistoryPositionList",
-        [](const TradeManager& tm) { return vector_to_python_list(tm.getHistoryPositionList()); },
-        "获取全部历史持仓记录，即已平仓记录")
+      .def("getHistoryPositionList", &TradeManager::getHistoryPositionList,
+           "获取全部历史持仓记录，即已平仓记录")
 
       .def(
         "getPosition", &TradeManager::getPosition,

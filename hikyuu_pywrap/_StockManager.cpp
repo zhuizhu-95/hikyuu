@@ -6,6 +6,7 @@
  */
 
 #include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
 #include <hikyuu/StockManager.h>
 #include "convert_any.h"
 #include "pybind_utils.h"
@@ -28,10 +29,7 @@ void export_StockManager(py::module& m) {
       .def("getPreloadParameter", &StockManager::getPreloadParameter)
       .def("getHikyuuParameter", &StockManager::getHikyuuParameter)
 
-      .def(
-        "getAllMarket",
-        [](const StockManager& sm) { return vector_to_python_list<string>(sm.getAllMarket()); },
-        "获取市场简称列表")
+      .def("getAllMarket", &StockManager::getAllMarket, "获取市场简称列表")
 
       .def("getMarketInfo", &StockManager::getMarketInfo, "获取相应的市场信息")
 
@@ -50,19 +48,13 @@ void export_StockManager(py::module& m) {
 :param str name: 板块名称
 :return: 板块，如找不到返回一个空 Block )")
 
-      .def(
-        "getBlockList",
-        [](StockManager& sm, const string& category) {
-            return vector_to_python_list<Block>(sm.getBlockList(category));
-        },
-        R"(获取指定分类的板块列表
+      .def("getBlockList", py::overload_cast<const string&>(&StockManager::getBlockList),
+           R"(获取指定分类的板块列表
 
 :param str category: 板块分类)")
 
-      .def(
-        "getBlockList",
-        [](StockManager& sm) { return vector_to_python_list<Block>(sm.getBlockList()); },
-        "获取全部的板块列表")
+      .def("getBlockList", py::overload_cast<void>(&StockManager::getBlockList),
+           "获取全部的板块列表")
 
       .def("getTradingCalendar", &StockManager::getTradingCalendar, py::arg("query"),
            py::arg("market") = "SH", R"(获取指定市场的交易日日历

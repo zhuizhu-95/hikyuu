@@ -6,6 +6,7 @@
  */
 
 #include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
 #include <hikyuu/hikyuu.h>
 #include "pybind_utils.h"
 #include "convert_Datetime.h"
@@ -43,22 +44,11 @@ void export_trade_sys(py::module& m);
 
 void export_data_driver(py::module& m);
 
+void export_trade_instance(py::module& m);
+
 PYBIND11_MODULE(core, m) {
-    m.def(
-      "get_date_range",
-      [](Datetime& start, Datetime& end) {
-          return vector_to_python_list<Datetime>(getDateRange(start, end));
-      },
-      py::arg("start"), py::arg("end"),
-      "Return a list of calendar dates for the specified range (start, end].");
-
-    m.def(
-      "print_datetime", [](const Datetime& d) { fmt::print("{}\n", d); },
-      "test convert Python datetime <--> Datetime");
-
-    m.def(
-      "print_timedelta", [](const TimeDelta& d) { fmt::print("{}\n", d); },
-      "test convert Python timedelta <--> TimeDelta");
+    m.def("get_date_range", getDateRange, py::arg("start"), py::arg("end"),
+          "Return a list of calendar dates for the specified range (start, end].");
 
     export_Constant(m);
     export_utils(m);
@@ -88,4 +78,6 @@ PYBIND11_MODULE(core, m) {
     export_trade_sys(m);
 
     export_data_driver(m);
+
+    export_trade_instance(m);
 }

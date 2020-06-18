@@ -8,6 +8,7 @@
 #include <sstream>
 #include <hikyuu/indicator/Indicator.h>
 #include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
 #include <pybind11/operators.h>
 #include "../convert_Datetime.h"
 #include "../convert_any.h"
@@ -170,7 +171,7 @@ void export_Indicator(py::module& m) {
                    start += step;
                }
 
-               return vector_to_python_list(result);
+               return result;
            })
 
       .def("items",

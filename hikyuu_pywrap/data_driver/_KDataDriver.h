@@ -26,8 +26,6 @@ public:
 
     void loadKData(const string& market, const string& code, KQuery::KType kType, size_t start_ix,
                    size_t end_ix, KRecordListPtr out_buffer) {
-        // PYBIND11_OVERLOAD(void, KDataDriver, loadKData, market, code, kType, start_ix, end_ix,
-        //                  out_buffer);
         auto self = py::cast(this);
         py::list kr_list = self.attr("_loadKData")(market, code, kType, start_ix, end_ix);
         auto total = len(kr_list);

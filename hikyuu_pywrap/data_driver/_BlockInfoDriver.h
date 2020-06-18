@@ -36,7 +36,7 @@ public:
 
     BlockList getBlockList() {
         auto self = py::cast(this);
-        auto py_list = self.attr("_getBlockList")(py::none);
+        auto py_list = self.attr("_getBlockList")(py::none());
         return python_list_to_vector<Block>(py_list);
     }
 };

@@ -6,6 +6,7 @@
  */
 
 #include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
 #include <hikyuu/trade_sys/system/build_in.h>
 #include "../convert_any.h"
 #include "../pybind_utils.h"
@@ -73,10 +74,7 @@ void export_System(py::module& m) {
 
       .def("haveParam", &System::haveParam, "是否存在指定参数")
 
-      .def(
-        "getTradeRecordList",
-        [](const System& sys) { return vector_to_python_list(sys.getTradeRecordList()); },
-        "获取交易记录")
+      .def("getTradeRecordList", &System::getTradeRecordList, "获取交易记录")
 
       .def("getBuyTradeRequest", &System::getBuyTradeRequest, py::return_value_policy::copy,
            "获取买入请求，“delay”模式下查看下一时刻是否存在买入操作")
