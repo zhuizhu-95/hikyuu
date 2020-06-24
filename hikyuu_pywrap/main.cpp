@@ -19,7 +19,6 @@ void export_Constant(py::module& m);
 void export_utils(py::module& m);
 void export_hikyuu(py::module& m);
 void export_Log(py::module& m);
-void export_stl_container(py::module& m);
 void export_Parameter(py::module& m);
 void export_KRecord(py::module& m);
 void export_StockManager(py::module& m);
@@ -54,7 +53,6 @@ PYBIND11_MODULE(core, m) {
     export_utils(m);
     export_hikyuu(m);
     export_Log(m);
-    export_stl_container(m);
     export_Parameter(m);
     export_KRecord(m);
     export_StockManager(m);

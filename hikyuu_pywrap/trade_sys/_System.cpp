@@ -74,6 +74,9 @@ void export_System(py::module& m) {
 
       .def("haveParam", &System::haveParam, "是否存在指定参数")
 
+      .def("getTO", &System::getTO, "获取交易对象")
+      .def("setTO", &System::setTO, "设置交易对象")
+
       .def("getTradeRecordList", &System::getTradeRecordList, "获取交易记录")
 
       .def("getBuyTradeRequest", &System::getBuyTradeRequest, py::return_value_policy::copy,

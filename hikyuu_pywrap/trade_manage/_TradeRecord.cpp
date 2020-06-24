@@ -15,23 +15,23 @@ namespace py = pybind11;
 
 void export_TradeRecord(py::module& m) {
     py::enum_<BUSINESS>(m, "BUSINESS", "业务类型")
-      .value("BUSINESS_INIT", BUSINESS_INIT, "建立初始账户")
-      .value("BUSINESS_BUY", BUSINESS_BUY, "买入")
-      .value("BUSINESS_SELL", BUSINESS_SELL, "卖出")
-      .value("BUSINESS_GIFT", BUSINESS_GIFT, "送股")
-      .value("BUSINESS_BONUS", BUSINESS_BONUS, "分红")
-      .value("BUSINESS_CHECKIN", BUSINESS_CHECKIN, "存入现金")
-      .value("BUSINESS_CHECKOUT", BUSINESS_CHECKOUT, "取出现金")
-      .value("BUSINESS_CHECKIN_STOCK", BUSINESS_CHECKIN_STOCK, "存入证券资产")
-      .value("BUSINESS_CHECKOUT_STOCK", BUSINESS_CHECKOUT_STOCK, "取出证券资产")
-      .value("BUSINESS_BORROW_CASH", BUSINESS_BORROW_CASH, "借入资金")
-      .value("BUSINESS_RETURN_CASH", BUSINESS_RETURN_CASH, "归还资金")
-      .value("BUSINESS_BORROW_STOCK", BUSINESS_BORROW_STOCK, "借入证券资产")
-      .value("BUSINESS_RETURN_STOCK", BUSINESS_RETURN_STOCK, "归还证券资产")
-      //.value("BUSINESS_SELL_SHORT", BUSINESS_SELL_SHORT, "卖空")
-      //.value("BUSINESS_BUY_SHORT", BUSINESS_BUY_SHORT, "卖空后回补")
-      .value("BUSINESS_INVALID", BUSINESS_INVALID, "无效业务类型")
-      .export_values();
+      .value("INIT", BUSINESS_INIT, "建立初始账户")
+      .value("BUY", BUSINESS_BUY, "买入")
+      .value("SELL", BUSINESS_SELL, "卖出")
+      .value("GIFT", BUSINESS_GIFT, "送股")
+      .value("BONUS", BUSINESS_BONUS, "分红")
+      .value("CHECKIN", BUSINESS_CHECKIN, "存入现金")
+      .value("CHECKOUT", BUSINESS_CHECKOUT, "取出现金")
+      .value("CHECKIN_STOCK", BUSINESS_CHECKIN_STOCK, "存入证券资产")
+      .value("CHECKOUT_STOCK", BUSINESS_CHECKOUT_STOCK, "取出证券资产")
+      .value("BORROW_CASH", BUSINESS_BORROW_CASH, "借入资金")
+      .value("RETURN_CASH", BUSINESS_RETURN_CASH, "归还资金")
+      .value("BORROW_STOCK", BUSINESS_BORROW_STOCK, "借入证券资产")
+      .value("RETURN_STOCK", BUSINESS_RETURN_STOCK, "归还证券资产")
+      .value("SELL_SHORT", BUSINESS_SELL_SHORT, "卖空")
+      .value("BUY_SHORT", BUSINESS_BUY_SHORT, "卖空后回补")
+      .value("INVALID", BUSINESS_INVALID, "无效业务类型");
+    //.export_values();
 
     m.def("getBusinessName", getBusinessName, "获取业务名称，用于打印输出");
 
