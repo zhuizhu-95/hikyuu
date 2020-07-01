@@ -57,6 +57,12 @@ from .pyindicator import *
 from .talib_wrap import *
 from .draw import *
 
+# ------------------------------------------------------------------
+#重定向C++ stdout/stderr输出至python
+# ------------------------------------------------------------------
+iodog = OstreamRedirect(True, True)
+iodog.open()
+
 
 # ------------------------------------------------------------------
 # 定义 KData, Indicator 迭代器

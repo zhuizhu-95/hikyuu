@@ -15,6 +15,7 @@
 using namespace hku;
 namespace py = pybind11;
 
+void export_io_redirect(py::module& m);
 void export_Constant(py::module& m);
 void export_utils(py::module& m);
 void export_hikyuu(py::module& m);
@@ -49,6 +50,7 @@ PYBIND11_MODULE(core, m) {
     m.def("get_date_range", getDateRange, py::arg("start"), py::arg("end"),
           "Return a list of calendar dates for the specified range (start, end].");
 
+    export_io_redirect(m);
     export_Constant(m);
     export_utils(m);
     export_hikyuu(m);

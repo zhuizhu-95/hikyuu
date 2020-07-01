@@ -5,12 +5,10 @@
  *      Author: fasiondog
  */
 
-#include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
-#include <hikyuu/trade_manage/TradeManager.h>
 #include "../convert_Datetime.h"
-#include "../pybind_utils.h"
 #include "../pickle_support.h"
+#include <hikyuu/trade_manage/TradeManager.h>
 
 using namespace hku;
 namespace py = pybind11;

@@ -14,8 +14,6 @@
 #include <vector>
 #include <string>
 
-PYBIND11_MAKE_OPAQUE(std::vector<double>);
-
 namespace py = pybind11;
 
 namespace hku {
