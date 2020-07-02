@@ -108,6 +108,57 @@ void export_KData(py::module& m) {
       .def("tocsv", &KData::tocsv, "输出数据到指定的 csv 文件中")
 
       .def("__getitem__",
+           [](const KData& k, py::object obj) {
+               PyObject* src = obj.ptr();
+               if (PyLong_Check(src)) {
+                   long i = PyLong_AsLong(src);
+                   long long len = k.size();
+                   long long index = i;
+                   if (index < 0) {
+                       index = len + index;
+                   }
+
+                   if (index < 0 || index >= len) {
+                       HKU_THROW_EXCEPTION(std::out_of_range, "Index out of range: {}", i);
+                   }
+
+                   return k.getKRecord(index);
+               }
+
+               if (PyUnicode_Check(src)) {
+                   py::object temp =
+                     py::reinterpret_borrow<py::object>(PyUnicode_AsUTF8String(src));
+                   if (!temp)
+                       py::pybind11_fail("Unable to extract string contents! (encoding issue)");
+                   char* buffer;
+                   ssize_t length;
+                   if (PYBIND11_BYTES_AS_STRING_AND_SIZE(temp.ptr(), &buffer, &length))
+                       py::pybind11_fail("Unable to extract string contents! (invalid type)");
+                   std::string date_str(buffer, (size_t)length);
+                   return k.getKRecordByDate(Datetime(date_str));
+               }
+
+               return k.getKRecordByDate(pydatetime_to_Datetime(obj));
+           })
+
+      .def("__getitem__",
+           [](const KData& k, py::slice slice) {
+               KRecordList result;
+               size_t start, stop, step, slicelength;
+               if (!slice.compute(k.size(), &start, &stop, &step, &slicelength)) {
+                   throw py::error_already_set();
+               }
+
+               result.reserve((size_t)slicelength);
+               for (size_t i = 0; i < slicelength; ++i) {
+                   result.push_back(k.getKRecord(start));
+                   start += step;
+               }
+
+               return result;
+           })
+
+      /*.def("__getitem__",
            [](const KData& k, long long i) {
                long long len = k.size();
                long long index = i;
@@ -143,9 +194,9 @@ void export_KData(py::module& m) {
                }
 
                return result;
-           })
+           })*/
 
-        DEF_PICKLE(KData);
+      DEF_PICKLE(KData);
 
     int64 null_int64 = Null<int64>();
     Datetime null_date = Null<Datetime>();
